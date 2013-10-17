@@ -1,0 +1,75 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.peiliping.web</groupId>
+	<artifactId>web</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>web</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<web-groupId>com.peiliping.web</web-groupId>
+		<web.version>1.0-SNAPSHOT</web.version>
+		<web-api.version>1.0-SNAPSHOT</web-api.version>
+		<web-server.version>1.0-SNAPSHOT</web-server.version>
+		<web-web.version>1.0-SNAPSHOT</web-web.version>
+	</properties>
+
+	<modules>
+		<module>web-api</module>
+		<module>web-server</module>
+		<module>web-web</module>
+	</modules>
+
+	<build>
+		<finalName>web</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+					<compilerArguments>
+						<verbose />
+						<bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
+					</compilerArguments>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>web-web/src/main/assembly/assembly.xml</descriptor>
+					</descriptors>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencyManagement>
+		<dependencies>
+			<!-- Self Dependencies -->
+			<dependency>
+				<groupId>${pom.groupId}</groupId>
+				<artifactId>web-api</artifactId>
+				<version>${web-api.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>${pom.groupId}</groupId>
+				<artifactId>web-server</artifactId>
+				<version>${web-server.version}</version>
+			</dependency>
+			<!-- Dependencies 4 Test -->
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>3.8.1</version>
+				<scope>test</scope>
+			</dependency>
+			<!-- Frame Dependencies -->
+
+		</dependencies>
+	</dependencyManagement>
+</project>
