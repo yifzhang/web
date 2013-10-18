@@ -8,13 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class TestControl {
 
-	private static Logger l = LoggerFactory.getLogger("web-log");
+	private static Logger logger = LoggerFactory.getLogger("web-log");
 	
-	@RequestMapping("/teee.htm")
+	@RequestMapping("/test.htm")
 	 public String test(){
-		
-		l.error("FFFF");
-		
-		 return "teee";
+		logger.error("FFFF");
+		 return "test";
 	 }
 }
