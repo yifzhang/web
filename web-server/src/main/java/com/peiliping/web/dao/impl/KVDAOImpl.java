@@ -5,6 +5,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 import com.peiliping.web.dao.KVDAO;
 import com.peiliping.web.dataobject.KV;
 
+@SuppressWarnings("deprecation")
 public class KVDAOImpl extends SqlMapClientDaoSupport implements KVDAO {
 
 	@Override

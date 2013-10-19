@@ -3,6 +3,7 @@
     PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"        
     "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
 <sqlMapConfig>
-	<!-- 配置Ibatis要使用的SqlMap文件信息 -->
+	
 	<sqlMap resource="kv.xml" />
+	
 </sqlMapConfig>

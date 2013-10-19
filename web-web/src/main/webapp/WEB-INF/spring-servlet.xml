@@ -28,7 +28,7 @@
 	</bean>
 
 	<bean id="velocityViewResolver"	class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
-		<property name="cache" value="false" />
+		<property name="cache" value="true" />
 		<property name="suffix" value=".vm" />
 		<property name="exposeSpringMacroHelpers" value="true" />
 		<property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityView"></property>
@@ -40,6 +40,7 @@
 	</bean>
 
 	<bean id="fmview" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true" />
 		<property name="prefix" value="" />
 		<property name="suffix" value=".ftl" />
 		<property name="exposeSpringMacroHelpers" value="true" />
@@ -54,7 +55,4 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
-	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="defaultErrorView" value="error" />
-	</bean>
 </beans>

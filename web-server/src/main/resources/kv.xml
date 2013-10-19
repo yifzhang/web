@@ -2,15 +2,16 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
 "http://www.ibatis.com/dtd/sql-map-2.dtd">
 <sqlMap namespace="KV">
+
 	<typeAlias alias="KV" type="com.peiliping.web.dataobject.KV" />
+	
 	<resultMap id="KV" class="KV">
 		<result column="k" property="k" />
 		<result column="k" property="v" />
 	</resultMap>
 
-	<select id="KVDAO.select"
-		resultMap="KV" parameterClass="String">
-		select k,v from	kv where k = #key#
+	<select id="KVDAO.select" resultMap="KV" parameterClass="String">
+		select	k,v from kv where k = #key#
 	</select>
 
 </sqlMap>
