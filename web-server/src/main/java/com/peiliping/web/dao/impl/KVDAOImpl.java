@@ -1,6 +1,9 @@
-package com.peiliping.web.DAO;
+package com.peiliping.web.dao.impl;
 
 import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
+
+import com.peiliping.web.dao.KVDAO;
+import com.peiliping.web.dataobject.KV;
 
 public class KVDAOImpl extends SqlMapClientDaoSupport implements KVDAO {
 

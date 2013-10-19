@@ -36,7 +36,7 @@
 		</property>
 	</bean>
 
-	<bean id="kvDAO" class="com.peiliping.web.DAO.KVDAOImpl">
+	<bean id="kvDAO" class="com.peiliping.web.dao.impl.KVDAOImpl">
 		<property name="sqlMapClient">
 			<ref bean="sqlMapClient" />
 		</property>
