@@ -10,20 +10,26 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestControl {
 
 	private static Logger logger = LoggerFactory.getLogger("web-log");
-	
+
 	@RequestMapping("/test.htm")
-	 public String test(){
-		logger.error("FFFF");
-		 return "test";
-	 }
-	
+	public String test() {
+		logger.error("testjsp");
+		return "test";
+	}
+
 	@RequestMapping("/testfm.htm")
-	 public ModelAndView testfm(){
+	public ModelAndView testfm() {
 		logger.error("testfm");
-		
 		ModelAndView mv = new ModelAndView("testfm");
-        mv.addObject("name", "My First Spring Mvc");
-		
-		 return mv;
-	 }
+		mv.addObject("name", "My First Spring Mvc");
+		return mv;
+	}
+
+	@RequestMapping("/testvm.htm")
+	public ModelAndView testvm() {
+		logger.error("testvm");
+		ModelAndView mv = new ModelAndView("testvm");
+		mv.addObject("name", "velocity");
+		return mv;
+	}
 }

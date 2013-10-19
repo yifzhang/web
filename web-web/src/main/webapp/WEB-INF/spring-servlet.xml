@@ -19,19 +19,31 @@
 	<bean id="jspview" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
-		<property name="viewClass"
-			value="org.springframework.web.servlet.view.JstlView"></property>
-		<property name="order" value="1" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="order" value="2" />
 	</bean>
+
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/views/velocity/" />
+	</bean>
+
+	<bean id="velocityViewResolver"	class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="false" />
+		<property name="suffix" value=".vm" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityView"></property>
+		<property name="order" value="1" />
+	</bean> 
 
 	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="/WEB-INF/views/freemarker/" />
 	</bean>
 
 	<bean id="fmview" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
 		<property name="prefix" value="" />
 		<property name="suffix" value=".ftl" />
+		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
 		<property name="order" value="0" />
 	</bean>
 
