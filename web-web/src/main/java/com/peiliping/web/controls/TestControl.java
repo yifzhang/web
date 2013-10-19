@@ -35,10 +35,14 @@ public class TestControl {
 
 	@RequestMapping("/testvm.htm")
 	public ModelAndView testvm() {
-		logger.error("testvm");
-		KV kv = kvDAO.getKV("1");
 		ModelAndView mv = new ModelAndView("testvm");
-		mv.addObject("name", kv.getV());
+		try{
+			logger.error("testvm");
+			KV kv = kvDAO.getKV("1");
+			mv.addObject("name", kv.getV());
+		}catch (Exception e) {
+			logger.error("sql",e);
+		}
 		return mv;
 	}
 	

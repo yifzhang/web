@@ -16,35 +16,43 @@
 
 	<context:component-scan base-package="com.peiliping.web.controls" />
 
-	<bean id="jspview" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	<bean id="jspview"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView"></property>
 		<property name="order" value="2" />
 	</bean>
 
-	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+	<bean id="velocityConfig"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
 		<property name="resourceLoaderPath" value="/WEB-INF/views/velocity/" />
 	</bean>
 
-	<bean id="velocityViewResolver"	class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+	<bean id="velocityViewResolver"
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
 		<property name="cache" value="true" />
 		<property name="suffix" value=".vm" />
 		<property name="exposeSpringMacroHelpers" value="true" />
-		<property name="viewClass" value="org.springframework.web.servlet.view.velocity.VelocityView"></property>
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.velocity.VelocityView"></property>
 		<property name="order" value="1" />
-	</bean> 
+	</bean>
 
-	<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
 		<property name="templateLoaderPath" value="/WEB-INF/views/freemarker/" />
 	</bean>
 
-	<bean id="fmview" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+	<bean id="fmview"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
 		<property name="cache" value="true" />
 		<property name="prefix" value="" />
 		<property name="suffix" value=".ftl" />
 		<property name="exposeSpringMacroHelpers" value="true" />
-		<property name="viewClass" value="org.springframework.web.servlet.view.freemarker.FreeMarkerView"/>
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.freemarker.FreeMarkerView" />
 		<property name="order" value="0" />
 	</bean>
 
@@ -55,4 +63,19 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 
+<!-- 
+	<bean id="exceptionResolver"
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<property name="defaultErrorView">
+			<value>error</value>
+		</property>
+		<property name="defaultStatusCode">
+			<value>500</value>
+		</property>
+		<property name="warnLogCategory">
+			<value>org.springframework.web.servlet.handler.SimpleMappingExceptionResolver
+			</value>
+		</property>
+	</bean>
+ -->
 </beans>
