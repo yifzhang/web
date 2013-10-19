@@ -2,12 +2,20 @@ package com.peiliping.web.controls;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.peiliping.web.DAO.KV;
+import com.peiliping.web.DAO.KVDAO;
+
 @Controller
 public class TestControl {
+	
+	@Autowired
+	private KVDAO kvDAO;
+	
 
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 
@@ -28,8 +36,11 @@ public class TestControl {
 	@RequestMapping("/testvm.htm")
 	public ModelAndView testvm() {
 		logger.error("testvm");
+		KV kv = kvDAO.getKV("1");
 		ModelAndView mv = new ModelAndView("testvm");
-		mv.addObject("name", "velocity");
+		mv.addObject("name", kv.getV());
 		return mv;
 	}
+	
+	
 }
