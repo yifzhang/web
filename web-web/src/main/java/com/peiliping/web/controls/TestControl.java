@@ -9,6 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.peiliping.web.dao.KVDAO;
 import com.peiliping.web.dataobject.KV;
+import com.peiliping.web.tools.SpringApplicationContextHolder;
 
 @Controller
 public class TestControl {
@@ -30,6 +31,10 @@ public class TestControl {
 		logger.error("testfm");
 		ModelAndView mv = new ModelAndView("testfm");
 		mv.addObject("name", "My First Spring Mvc");
+		String[] l = SpringApplicationContextHolder.getBeanDefinitionNames();
+		for(String i : l){
+			logger.error(i);
+		}
 		return mv;
 	}
 
