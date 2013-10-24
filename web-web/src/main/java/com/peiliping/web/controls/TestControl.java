@@ -45,7 +45,7 @@ public class TestControl {
 			logger.error("testvm");
 			KV kv = kvDAO.getKV("1");
 			mv.addObject("name", kv.getV());
-		}catch (Exception e) {
+		}catch (Throwable e) {
 			logger.error("sql",e);
 		}
 		return mv;

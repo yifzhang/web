@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tools>
+	<data type="number" key="TOOLS_VERSION" value="2.0" />
+	<data type="boolean" key="GENERIC_TOOLS_AVAILABLE" value="true" />
+	<toolbox scope="application">
+		<tool key="testUtil" class="com.peiliping.web.vmtools.vmtooltest" />
+	</toolbox>
+</tools>  

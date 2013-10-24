@@ -25,9 +25,20 @@
 		<property name="order" value="2" />
 	</bean>
 
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="resourceLoaderPath" value="/WEB-INF/views/velocity/" />
+		<property name="velocityProperties">
+			<props>
+				<prop key="file.resource.loader.cache">false</prop>
+				<prop key="file.resource.loader.modificationCheckInterval">2</prop>
+			</props>
+		</property>
+	</bean>
+
 	<bean id="velocityConfig"
 		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
-		<property name="resourceLoaderPath" value="/WEB-INF/views/velocity/" />
+		<property name="velocityEngine" ref="velocityEngine" />
 	</bean>
 
 	<bean id="velocityViewResolver"
@@ -35,8 +46,10 @@
 		<property name="cache" value="true" />
 		<property name="suffix" value=".vm" />
 		<property name="exposeSpringMacroHelpers" value="true" />
+		<property name="exposeRequestAttributes" value="true" />
+		<property name="toolboxConfigLocation" value="/WEB-INF/vm-tools.xml" />
 		<property name="viewClass"
-			value="org.springframework.web.servlet.view.velocity.VelocityView"></property>
+			value="com.peiliping.frame.VelocityToolboxViewV2"></property>
 		<property name="order" value="1" />
 	</bean>
 
