@@ -1,14 +1,18 @@
 package com.peiliping.web.controls;
 
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.peiliping.web.dao.KVDAO;
 import com.peiliping.web.dataobject.KV;
+import com.peiliping.web.tools.MapX;
 import com.peiliping.web.tools.SpringApplicationContextHolder;
 
 @Controller
@@ -30,7 +34,7 @@ public class TestControl {
 	public ModelAndView testfm() {
 		logger.error("testfm");
 		ModelAndView mv = new ModelAndView("testfm");
-		mv.addObject("name", "My First Spring Mvc");
+		mv.addObject("name", "My First Spring Mvc");		
 		String[] l = SpringApplicationContextHolder.getBeanDefinitionNames();
 		for(String i : l){
 			logger.error(i);
@@ -49,6 +53,12 @@ public class TestControl {
 			logger.error("sql",e);
 		}
 		return mv;
+	}
+	
+	@RequestMapping("/testvm2.htm")
+	@ResponseBody
+	public Map<String, Object> testvm2() {
+		return (new MapX()).add("a", "b").add("c", "d").add("e", "f").end();
 	}
 	
 	
