@@ -71,7 +71,7 @@
 			<artifactId>guava</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba.platform.shared</groupId>
+			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 		</dependency>
 		<dependency>
