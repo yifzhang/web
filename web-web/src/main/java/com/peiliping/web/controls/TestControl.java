@@ -26,6 +26,11 @@ public class TestControl {
 
 	@RequestMapping("/test.htm")
 	public String test() {
+		try {
+			Thread.sleep(50);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		logger.error("testjsp");
 		return "test";
 	}
