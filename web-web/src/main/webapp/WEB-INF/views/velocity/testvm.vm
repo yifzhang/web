@@ -1,4 +1,4 @@
-#parse("views/velocity/head.vm")
+#parse("head.vm")
 <body>
 Hello ${name}
 $testUtil.test()

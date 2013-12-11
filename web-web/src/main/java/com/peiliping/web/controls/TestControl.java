@@ -21,7 +21,6 @@ public class TestControl {
 	@Autowired
 	private KVDAO kvDAO;
 	
-
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 
 	@RequestMapping("/test.htm")
