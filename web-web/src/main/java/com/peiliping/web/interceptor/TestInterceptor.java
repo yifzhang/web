@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class TestInterceptor implements HandlerInterceptor {
 
 	private static Logger logger = LoggerFactory.getLogger("web-log");
-	
+
 	@Override
 	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {

@@ -26,18 +26,18 @@
 		</property>
 	</bean>
 
-	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
-		<property name="configLocation">
-			<value>classpath:sqlMapConfig.xml</value>
-		</property>
-		<property name="dataSource">
-			<ref bean="dataSource" />
-		</property>
+	<bean id="wrappedDataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource" ref="dataSource" />
+    </bean>
+
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.peiliping.web.dao" />
 	</bean>
 
-	<bean id="kvDAO" class="com.peiliping.web.dao.impl.KVDAOImpl">
-		<property name="sqlMapClient">
-			<ref bean="sqlMapClient" />
-		</property>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="wrappedDataSource" />
+		<property name="configLocation" value="classpath:mybatis-configuration.xml" />
+		<property name="typeAliasesPackage" value="com.blueocn.tpm.server.entity" />
 	</bean>
+	
 </beans>

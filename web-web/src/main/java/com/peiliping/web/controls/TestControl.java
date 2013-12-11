@@ -17,10 +17,10 @@ import com.peiliping.web.tools.SpringApplicationContextHolder;
 
 @Controller
 public class TestControl {
-	
+
 	@Autowired
 	private KVDAO kvDAO;
-	
+
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 
 	@RequestMapping("/test.htm")
@@ -38,9 +38,9 @@ public class TestControl {
 	public ModelAndView testfm() {
 		logger.error("testfm");
 		ModelAndView mv = new ModelAndView("testfm");
-		mv.addObject("name", "My First Spring Mvc");		
+		mv.addObject("name", "My First Spring Mvc");
 		String[] l = SpringApplicationContextHolder.getBeanDefinitionNames();
-		for(String i : l){
+		for (String i : l) {
 			logger.error(i);
 		}
 		return mv;
@@ -49,21 +49,20 @@ public class TestControl {
 	@RequestMapping("/testvm.htm")
 	public ModelAndView testvm() {
 		ModelAndView mv = new ModelAndView("testvm");
-		try{
+		try {
 			logger.error("testvm");
 			KV kv = kvDAO.getKV("1");
 			mv.addObject("name", kv.getV());
-		}catch (Throwable e) {
-			logger.error("sql",e);
+		} catch (Throwable e) {
+			logger.error("sql", e);
 		}
 		return mv;
 	}
-	
+
 	@RequestMapping("/testvm2.htm")
 	@ResponseBody
 	public Map<String, Object> testvm2() {
 		return (new MapX()).add("a", "b").add("c", "d").add("e", "f").end();
 	}
-	
-	
+
 }

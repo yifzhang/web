@@ -10,9 +10,9 @@ import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
-
 public class LogbackConfigListener implements ServletContextListener {
-	private static final Logger logger = LoggerFactory.getLogger(LogbackConfigListener.class);
+	private static final Logger logger = LoggerFactory
+			.getLogger(LogbackConfigListener.class);
 
 	private static final String CONFIG_LOCATION = "logbackConfigLocation";
 
