@@ -11,21 +11,18 @@ import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
 
 public class LogbackConfigListener implements ServletContextListener {
-	private static final Logger logger = LoggerFactory
-			.getLogger(LogbackConfigListener.class);
+	
+	private static final Logger logger = LoggerFactory.getLogger(LogbackConfigListener.class);
 
 	private static final String CONFIG_LOCATION = "logbackConfigLocation";
 
 	@Override
 	public void contextInitialized(ServletContextEvent event) {
 		// 从web.xml中加载指定文件名的日志配置文件
-		String logbackConfigLocation = event.getServletContext()
-				.getInitParameter(CONFIG_LOCATION);
-		String fn = event.getServletContext()
-				.getRealPath(logbackConfigLocation);
+		String logbackConfigLocation = event.getServletContext().getInitParameter(CONFIG_LOCATION);
+		String fn = event.getServletContext().getRealPath(logbackConfigLocation);
 		try {
-			LoggerContext loggerContext = (LoggerContext) LoggerFactory
-					.getILoggerFactory();
+			LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
 			loggerContext.reset();
 			JoranConfigurator joranConfigurator = new JoranConfigurator();
 			joranConfigurator.setContext(loggerContext);
