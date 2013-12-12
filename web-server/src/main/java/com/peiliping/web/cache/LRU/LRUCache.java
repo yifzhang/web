@@ -24,6 +24,8 @@ public class LRUCache {
 	private AtomicLong in = new AtomicLong(0);
 
 	private AtomicLong hit = new AtomicLong(0);
+	
+	private AtomicLong maxsize = new AtomicLong(0);
 
 	public LRUCache(String title) {
 		this(title, DEFAULT_MAXSIZE);
@@ -36,6 +38,7 @@ public class LRUCache {
 	public LRUCache(String title, int maxsize, long expiretime) {
 		this.title = title;
 		this.expiretime.set(expiretime);
+		this.maxsize.set(maxsize) ;
 		cache = new ConcurrentLinkedHashMap.Builder<Object, CacheItem>()
 				.maximumWeightedCapacity(maxsize).weigher(Weighers.singleton())
 				.build();
@@ -51,7 +54,7 @@ public class LRUCache {
 
 	public Object get(Object key) {
 		
-		if(!IN_USE.get()){return null ;	}
+		if(!IN_USE.get()){return null ; }
 		
 		in.addAndGet(1);
 		CacheItem item = cache.get(key);
@@ -69,10 +72,15 @@ public class LRUCache {
 	}
 
 	public void put(Object key, Object value) {
-		if(!IN_USE.get()){return ;}
+		if(!IN_USE.get() || cache.size() > maxsize.longValue() * 2 ){return ;}
 		cache.put(key, new CacheItem(value));
 	}
-
+	
+	public Object putIfAbsent(Object key, Object value) {
+		if(!IN_USE.get() || cache.size() > maxsize.longValue() * 2 ){return null;}
+		return cache.putIfAbsent(key, new CacheItem(value));
+	}
+	
 	public Object remove(Object key) {
 		return cache.remove(key);
 	}
@@ -84,10 +92,13 @@ public class LRUCache {
 	public Set<Object> dumpKey() {
 		return cache.keySet();
 	}
+	
+	public int size(){
+		return cache.size();
+	}
 
 	public void configOnline(long expiretime,int maxsize) {
 		this.expiretime.set(expiretime);
 		this.cache.setCapacity(maxsize);
 	}
-
 }

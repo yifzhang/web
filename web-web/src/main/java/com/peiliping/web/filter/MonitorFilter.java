@@ -21,6 +21,8 @@ public class MonitorFilter implements Filter {
 	private static final String PARA_MAXQPS = "maxqps";
 
 	private static final String PARA_PROTECTED_MODE = "protected";
+	
+	private static final String PARA_STATISTICS_URI_DETAIL = "statisticsuridetail";
 
 	private static final String LOG_MAIN_ITEM = "PV";
 
@@ -29,42 +31,38 @@ public class MonitorFilter implements Filter {
 	private MonitorUtil mt;
 
 	public static boolean PROTECTED_MODE = false;
+	
+	public static boolean STATISTICS_URI_DETAIL = false;
 
-	private int maxqps = 0;
+	public static int maxqps = 0;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		log = LoggerFactory.getLogger(MonitorFilter.class);
-		mt = new MonitorUtil(log, LOG_MAIN_ITEM);
+		mt = new MonitorUtil(log,50 ,LOG_MAIN_ITEM);
 		String mode = filterConfig.getInitParameter(PARA_PROTECTED_MODE);
 		PROTECTED_MODE = Boolean.valueOf(mode);
+		String urimode = filterConfig.getInitParameter(PARA_STATISTICS_URI_DETAIL);
+		STATISTICS_URI_DETAIL = Boolean.valueOf(urimode);
 		String limitqps = filterConfig.getInitParameter(PARA_MAXQPS);
 		maxqps = (limitqps == null ? 0 : Integer.valueOf(limitqps));
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain) throws IOException, ServletException {
 		String uri = ((HttpServletRequest) request).getRequestURI();
-		if (PROTECTED_MODE) {
-			if (mt.getResult(LOG_MAIN_ITEM).getActiveThread() >= maxqps) {
-				return;
-			}
-		}
-
+		if (PROTECTED_MODE && mt.getActive(LOG_MAIN_ITEM) >= maxqps)			return;
 		long starttime = System.currentTimeMillis();
 		mt.in(LOG_MAIN_ITEM);
-		mt.in(uri);
+		if(STATISTICS_URI_DETAIL) mt.in(uri);
 		boolean status = false;
 		try {
 			chain.doFilter(request, response);
 			status = true;
 		} finally {
 			long costtime = System.currentTimeMillis() - starttime;
-			mt.out(LOG_MAIN_ITEM, costtime, status ? MonitorResult.TYPE_SUCCESS
-					: MonitorResult.TYPE_FAILURE);
-			mt.out(uri, costtime, status ? MonitorResult.TYPE_SUCCESS
-					: MonitorResult.TYPE_FAILURE);
+			mt.out(LOG_MAIN_ITEM, costtime, status ? MonitorResult.TYPE_SUCCESS	: MonitorResult.TYPE_FAILURE);
+			if(STATISTICS_URI_DETAIL) mt.out(uri, costtime, status ? MonitorResult.TYPE_SUCCESS : MonitorResult.TYPE_FAILURE);
 		}
 	}
 

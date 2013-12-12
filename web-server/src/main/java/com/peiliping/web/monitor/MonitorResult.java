@@ -137,6 +137,10 @@ public class MonitorResult {
 		return duration;
 	}
 
+	public boolean isEmpty(){
+		return in == 0 ; 
+	}
+	
 	public String tolog() {
 		StringBuilder r = new StringBuilder();
 		r.append("In:" + in + ",");

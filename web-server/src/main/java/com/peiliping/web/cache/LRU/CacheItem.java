@@ -12,7 +12,7 @@ public class CacheItem {
 	}
 
 	public boolean isTimeOut(long expiretime) {
-		return System.currentTimeMillis() - createTime > expiretime;
+		return expiretime == Long.MAX_VALUE ? false :( System.currentTimeMillis() - createTime > expiretime);
 	}
 
 	public Object getValue() {

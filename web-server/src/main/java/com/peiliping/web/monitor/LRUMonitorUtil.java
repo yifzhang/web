@@ -1,18 +1,17 @@
 package com.peiliping.web.monitor;
 
-import java.util.Map.Entry;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 
-public class MonitorUtil {
+import com.peiliping.web.cache.LRU.LRUCache;
 
-	private ConcurrentMap<String, AtomicReference<MonitorResult>> monitorMap;
+public class LRUMonitorUtil {
+
+	private LRUCache monitorMap;
 
 	private Timer timer ;
 	
@@ -25,10 +24,10 @@ public class MonitorUtil {
 	 * 
 	 * @param strings
 	 */
-	public MonitorUtil(Logger logger,int maxsize,boolean needScheduleLog,long scheduleTime,String... strings) {
+	public LRUMonitorUtil(Logger logger,int maxsize,boolean needScheduleLog,long scheduleTime,String... strings) {
 		this.maxsize = maxsize ;
 		this.logger = logger ;
-		this.monitorMap = new ConcurrentHashMap<String, AtomicReference<MonitorResult>>(maxsize/4);
+		this.monitorMap = new LRUCache("LRUMonitor", maxsize, Long.MAX_VALUE);
 		if (strings != null && strings.length <= maxsize) {
 			for (String item : strings) {
 				monitorMap.put(item, new AtomicReference<MonitorResult>(new MonitorResult(0, 0, 0, 0, 0, 0))); 
@@ -45,11 +44,11 @@ public class MonitorUtil {
 		}
 	}
 	
-	public MonitorUtil(Logger logger, int maxsize ,String... strings){
+	public LRUMonitorUtil(Logger logger, int maxsize ,String... strings){
 		this(logger,maxsize,true,2*60*1000,strings);
 	}
 	
-	public MonitorUtil(int maxsize ,String... strings){
+	public LRUMonitorUtil(int maxsize ,String... strings){
 		this(null,maxsize,false,0,strings);
 	}
 
@@ -64,7 +63,7 @@ public class MonitorUtil {
 	 * @return
 	 */
 	public MonitorResult getResult(String itemname) {
-		AtomicReference<MonitorResult> ref = monitorMap.get(itemname);
+		AtomicReference<MonitorResult> ref = convert(monitorMap.get(itemname));
 		return ref==null ? null : ref.get();
 	}
 	
@@ -84,7 +83,7 @@ public class MonitorUtil {
 	public void in(String itemname, long q) {
 		AtomicReference<MonitorResult> ref;
 		while (true) {
-			ref = monitorMap.get(itemname);
+			ref = convert(monitorMap.get(itemname));
 			if (ref == null) {
 				if(monitorMap.size()> maxsize ) return ;
 				ref = new AtomicReference<MonitorResult>(new MonitorResult(0, 0, 0, 0, 0, 0));
@@ -116,9 +115,9 @@ public class MonitorUtil {
 	 *            默认写1
 	 */
 	public void out(String itemname, long costtime, int type, long q) {
-		AtomicReference<MonitorResult> ref;
+		AtomicReference<MonitorResult> ref ;
 		while (true) {
-			ref = monitorMap.get(itemname);
+			ref = convert(monitorMap.get(itemname));
 			if (ref == null || ref.compareAndSet(ref.get(), new MonitorResult(ref.get(), q, costtime, type)))
 				return;
 		}
@@ -138,9 +137,9 @@ public class MonitorUtil {
 	 * @param itemname
 	 */
 	public void r2zero(String itemname) {
-		AtomicReference<MonitorResult> ref ;
+		AtomicReference<MonitorResult> ref;
 		while (true) {
-			ref = monitorMap.get(itemname);
+			ref = convert(monitorMap.get(itemname));
 			if (ref == null	|| ref.compareAndSet(ref.get(),	new MonitorResult(ref.get())))
 				return;
 		}
@@ -158,13 +157,18 @@ public class MonitorUtil {
 	}
 	
 	public void toLog(Logger log , boolean needClean) {
-		Iterator<Entry<String, AtomicReference<MonitorResult>>> it = monitorMap.entrySet().iterator();
-		Entry<String, AtomicReference<MonitorResult>> e ;
+		Iterator<Object> it = monitorMap.dumpKey().iterator();
+		String key ;
 		while(it.hasNext()){
-			e = it.next();
-			log.warn(e.getKey() + "\t" + e.getValue().get().tolog());
+			key = (String)it.next();
+			log.warn(key + "\t" + convert(monitorMap.get(key)).get().tolog());
 			if (needClean)
-				r2zero(e.getKey());
+				r2zero(key);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static AtomicReference<MonitorResult> convert(Object o){
+		return o == null ? null : (AtomicReference<MonitorResult>) o;
 	}
 }
