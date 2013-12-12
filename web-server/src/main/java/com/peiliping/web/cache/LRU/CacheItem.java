@@ -2,7 +2,7 @@ package com.peiliping.web.cache.LRU;
 
 public class CacheItem {
 
-	private Object value; 
+	private Object value;
 
 	private long createTime;
 
@@ -12,7 +12,7 @@ public class CacheItem {
 	}
 
 	public boolean isTimeOut(long expiretime) {
-		return expiretime == Long.MAX_VALUE ? false :( System.currentTimeMillis() - createTime > expiretime);
+		return expiretime == Long.MAX_VALUE ? false : (System.currentTimeMillis() - createTime > expiretime);
 	}
 
 	public Object getValue() {

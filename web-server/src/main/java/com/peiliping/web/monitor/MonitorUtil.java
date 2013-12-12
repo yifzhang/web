@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 
-public class MonitorUtil {
+public class MonitorUtil implements IMonitorUtil {
 
 	private ConcurrentMap<String, AtomicReference<MonitorResult>> monitorMap;
 
@@ -53,34 +53,24 @@ public class MonitorUtil {
 		this(null,maxsize,false,0,strings);
 	}
 
+	@Override
 	public void reset() {
 		monitorMap.clear();
 	}
 
-	/**
-	 * 获得某条目的当前统计对象
-	 * 
-	 * @param itemname
-	 * @return
-	 */
+	@Override
 	public MonitorResult getResult(String itemname) {
 		AtomicReference<MonitorResult> ref = monitorMap.get(itemname);
 		return ref==null ? null : ref.get();
 	}
 	
+	@Override
 	public long getActive(String itemname){
 		MonitorResult mr = getResult(itemname);
 		return mr == null ? 0 : mr.getActiveThread();
 	}
 
-	/**
-	 * 进入的时候计数
-	 * 
-	 * @param itemname
-	 *            计数条目名称
-	 * @param q
-	 *            默认写1
-	 */
+	@Override
 	public void in(String itemname, long q) {
 		AtomicReference<MonitorResult> ref;
 		while (true) {
@@ -98,23 +88,12 @@ public class MonitorUtil {
 		}
 	}
 
+	@Override
 	public void in(String itemname) {
 		in(itemname, 1);
 	}
 
-	/**
-	 * 退出的时候计数
-	 * 
-	 * @param itemname
-	 *            条目名称
-	 * @param costtime
-	 *            消耗时间
-	 * @param type
-	 *            @link com.peiliping.web.monitor.MonitorResult
-	 *            TYPE_SUCCESS TYPE_FAILURE TYPE_EXCEPTION
-	 * @param q
-	 *            默认写1
-	 */
+	@Override
 	public void out(String itemname, long costtime, int type, long q) {
 		AtomicReference<MonitorResult> ref;
 		while (true) {
@@ -124,19 +103,17 @@ public class MonitorUtil {
 		}
 	}
 
+	@Override
 	public void out(String itemname, long costtime, int type) {
 		out(itemname, costtime, type, 1);
 	}
 
+	@Override
 	public void out(String itemname, long costtime) {
 		out(itemname, costtime, MonitorResult.TYPE_SUCCESS);
 	}
 
-	/**
-	 * 清零
-	 * 
-	 * @param itemname
-	 */
+	@Override
 	public void r2zero(String itemname) {
 		AtomicReference<MonitorResult> ref ;
 		while (true) {
@@ -146,17 +123,12 @@ public class MonitorUtil {
 		}
 	}
 
-	/**
-	 * 打印日志
-	 * 
-	 * @param log
-	 * @param needClean
-	 *            打印后是否清零 建议清零
-	 */
+	@Override
 	public void toLog(boolean needClean) {
 		toLog(logger,needClean);
 	}
 	
+	@Override
 	public void toLog(Logger log , boolean needClean) {
 		Iterator<Entry<String, AtomicReference<MonitorResult>>> it = monitorMap.entrySet().iterator();
 		Entry<String, AtomicReference<MonitorResult>> e ;
