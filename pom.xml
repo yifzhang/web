@@ -172,6 +172,12 @@
 				<artifactId>mysql-connector-java</artifactId>
 				<version>5.1.26</version>
 			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>1.0.0</version>
+			</dependency>
+            
 			<!-- Other -->
 			<dependency>
 				<groupId>com.google.code.gson</groupId>

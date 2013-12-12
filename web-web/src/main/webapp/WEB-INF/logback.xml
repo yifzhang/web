@@ -25,6 +25,10 @@
 			<pattern>%d{HH:mm:ss.SSS} %-5level %msg%n</pattern>
 		</layout>
 	</appender>
+	
+	<logger name="com.alibaba.druid.filter.stat.StatFilter" level="INFO"	additivity="false">
+		<appender-ref ref="A" />
+	</logger>
 
 	<logger name="web-log" level="INFO"	additivity="false">
 		<appender-ref ref="A" />

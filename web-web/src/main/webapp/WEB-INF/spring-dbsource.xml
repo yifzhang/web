@@ -10,9 +10,9 @@
     http://www.springframework.org/schema/context/spring-context-3.0.xsd
     http://www.springframework.org/schema/mvc
     http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
-
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName">
+	
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+    	<property name="driverClassName">
 			<value>com.mysql.jdbc.Driver</value>
 		</property>
 		<property name="url">
@@ -24,6 +24,11 @@
 		<property name="password">
 			<value>${mysqlpassword}</value>
 		</property>
+    	<property name="initialSize" value="1" />
+    	<property name="maxActive" value="20" />
+    	<property name="filters" value="stat,slf4j" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="timeBetweenLogStatsMillis" value="120000" />
 	</bean>
 
 	<bean id="wrappedDataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
