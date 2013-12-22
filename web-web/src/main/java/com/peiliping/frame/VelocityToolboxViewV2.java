@@ -13,6 +13,7 @@ import org.springframework.web.servlet.view.velocity.VelocityToolboxView;
 
 public class VelocityToolboxViewV2 extends VelocityToolboxView {
 
+	//TODO  每次都初始化一次这样是不是太糟糕了？
 	@Override
 	protected Context createVelocityContext(Map<String, Object> model,HttpServletRequest request, HttpServletResponse response)	throws Exception {
 		
