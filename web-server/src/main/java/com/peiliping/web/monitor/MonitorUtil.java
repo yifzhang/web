@@ -20,11 +20,6 @@ public class MonitorUtil implements IMonitorUtil {
 	
 	private int maxsize = 100 ;
 	
-	/**
-	 * 把要统计的条目列出来
-	 * 
-	 * @param strings
-	 */
 	public MonitorUtil(Logger logger,int maxsize,boolean needScheduleLog,long scheduleTime,String... strings) {
 		this.maxsize = maxsize ;
 		this.logger = logger ;
