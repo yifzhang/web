@@ -59,6 +59,19 @@ public class TestControl {
 		return mv;
 	}
 
+	@RequestMapping("/testlayout.htm")
+	public ModelAndView testlayoutvm() {
+		ModelAndView mv = new ModelAndView("testlayout");
+		try {
+			logger.error("testvm");
+			KV kv = kvDAO.getKV("1");
+			mv.addObject("name", kv.getV());
+		} catch (Throwable e) {
+			logger.error("sql", e);
+		}
+		return mv;
+	}
+	
 	@RequestMapping("/testvm2.htm")
 	@ResponseBody
 	public Map<String, Object> testvm2() {

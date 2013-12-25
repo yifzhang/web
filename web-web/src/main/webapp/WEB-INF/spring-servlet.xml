@@ -42,14 +42,14 @@
 	</bean>
 
 	<bean id="velocityViewResolver"
-		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		class="org.springframework.web.servlet.view.velocity.VelocityLayoutViewResolver">
 		<property name="cache" value="true" />
 		<property name="suffix" value=".vm" />
+		<property name="layoutUrl" value="layout/testlayout.vm" />
 		<property name="exposeSpringMacroHelpers" value="true" />
 		<property name="exposeRequestAttributes" value="true" />
 		<property name="toolboxConfigLocation" value="/WEB-INF/vm-tools.xml" />
-		<property name="viewClass"
-			value="com.peiliping.frame.VelocityToolboxViewV2"></property>
+		<property name="viewClass" value="com.peiliping.frame.VelocityToolboxViewV2" />
 		<property name="order" value="1" />
 	</bean>
 
