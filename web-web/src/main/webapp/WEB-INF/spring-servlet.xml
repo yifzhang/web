@@ -30,8 +30,11 @@
 		<property name="resourceLoaderPath" value="/WEB-INF/views/velocity/" />
 		<property name="velocityProperties">
 			<props>
-				<prop key="file.resource.loader.cache">false</prop>
-				<prop key="file.resource.loader.modificationCheckInterval">2</prop>
+				<prop key="velocimacro.library.autoreload">false</prop>
+				<prop key="file.resource.loader.modificationCheckInterval">3600</prop>
+				<prop key="file.resource.loader.cache">true</prop>
+				<prop key="resource.manager.defaultcache.size">300</prop>
+				<prop key="parser.pool.size">100</prop>
 			</props>
 		</property>
 	</bean>
