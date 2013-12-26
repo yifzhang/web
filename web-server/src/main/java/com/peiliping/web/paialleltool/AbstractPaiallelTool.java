@@ -51,13 +51,12 @@ public abstract class AbstractPaiallelTool<R> {
 		long remaintime = timeout;
 
 		try {
+			FutureTask<R> dbtask;
 			for (int i = 0; i < callableList.size(); i++) {
-				FutureTask<R> dbtask = new FutureTask<R>(callableList.get(i));
+				dbtask = new FutureTask<R>(callableList.get(i));
 				l.add(dbtask);
 				pool.submit(dbtask);
 			}
-
-			FutureTask<R> dbtask;
 			long start, end;
 			R t = null;
 			for (int i = 0; i < callableList.size(); i++) {
