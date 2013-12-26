@@ -25,4 +25,10 @@ public class SharePoolPaiallelTool<R> extends AbstractPaiallelTool<R> {
 		return runcore(callableList,sharePool,tmp_timeout);
 	}
 
+	@Override
+	public PaiallelResult<R> asyncRun(List<Callable<R>> callableList) {
+		checkParams(callableList);
+		return asyncRuncore(callableList, sharePool);
+	}
+
 }

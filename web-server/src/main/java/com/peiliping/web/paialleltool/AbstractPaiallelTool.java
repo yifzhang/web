@@ -46,6 +46,21 @@ public abstract class AbstractPaiallelTool<R> {
 	
 	public abstract PaiallelResult<R> run(List<Callable<R>> callableList,Long tmp_timeout) ;
 	
+	public abstract PaiallelResult<R> asyncRun(List<Callable<R>> callableList);
+	
+	protected PaiallelResult<R> asyncRuncore(List<Callable<R>> callableList,ExecutorService pool){
+		PaiallelResult<R> pr = new PaiallelResult<R>() ; 
+		try {
+			for (int i = 0; i < callableList.size(); i++) {
+				pool.submit(new FutureTask<R>(callableList.get(i)));
+			}
+		}catch (Exception e) {
+			logger.error("PaiallerTool",e);
+			pr.isComplete = false ;
+		}
+		return pr;
+	}
+	
 	protected PaiallelResult<R> runcore(List<Callable<R>> callableList,ExecutorService pool ,Long tmp_timeout){
 		PaiallelResult<R> pr = new PaiallelResult<R>() ; 
 		List<FutureTask<R>> l = new ArrayList<FutureTask<R>>();
