@@ -37,18 +37,21 @@ public abstract class AbstractPaiallelTool<R> {
 		}
 	}
 	
-	protected ExecutorService getPool(){
-		return new ThreadPoolExecutor(runningThreadNum, maxsize,
+	protected ExecutorService getPool(Integer tmp_maxsize){
+		return new ThreadPoolExecutor(runningThreadNum, tmp_maxsize==null?maxsize:tmp_maxsize,
                 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>());
 	}
 	
-	public abstract PaiallelResult<R> run(List<Callable<R>> callableList) ;
+	public abstract PaiallelResult<R> run(List<Callable<R>> callableList);
 	
-	protected PaiallelResult<R> runcore(List<Callable<R>> callableList,ExecutorService pool){
+	public abstract PaiallelResult<R> run(List<Callable<R>> callableList,Long tmp_timeout) ;
+	
+	protected PaiallelResult<R> runcore(List<Callable<R>> callableList,ExecutorService pool ,Long tmp_timeout){
 		PaiallelResult<R> pr = new PaiallelResult<R>() ; 
 		List<FutureTask<R>> l = new ArrayList<FutureTask<R>>();
 		List<R> result = new ArrayList<R>();
-		long remaintime = timeout;
+		long this_timeout = (tmp_timeout == null ) ? timeout : tmp_timeout;
+		long remaintime = this_timeout;
 
 		try {
 			FutureTask<R> dbtask;
@@ -83,7 +86,7 @@ public abstract class AbstractPaiallelTool<R> {
 			pr.isComplete = false ;
 			logger.error("PaiallerTool",e);
 		}
-		pr.costtime = timeout - remaintime ;
+		pr.costtime = this_timeout - remaintime ;
 		pr.resultList = result ;
 		return pr;
 	}

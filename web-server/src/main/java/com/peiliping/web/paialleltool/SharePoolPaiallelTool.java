@@ -10,12 +10,19 @@ public class SharePoolPaiallelTool<R> extends AbstractPaiallelTool<R> {
 	
 	public SharePoolPaiallelTool(long timeout, long praytime,int runningthreadnum,int maxsize) {
 		super(timeout, praytime, runningthreadnum,maxsize);
-		this.sharePool = getPool();
+		this.sharePool = getPool(null);
 	}
 
 	@Override
 	public PaiallelResult<R> run(List<Callable<R>> callableList) {
 		checkParams(callableList);
-		return runcore(callableList,sharePool);
+		return runcore(callableList,sharePool,null);
 	}
+
+	@Override
+	public PaiallelResult<R> run(List<Callable<R>> callableList,Long tmp_timeout) {
+		checkParams(callableList);
+		return runcore(callableList,sharePool,tmp_timeout);
+	}
+
 }
