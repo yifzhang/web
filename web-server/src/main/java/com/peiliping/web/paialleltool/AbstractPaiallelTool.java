@@ -88,17 +88,4 @@ public abstract class AbstractPaiallelTool<R> {
 		pr.resultList = result ;
 		return pr;
 	}
-	
-	public class PaiallelResult<T> {
-
-		//并行执行结果
-		public List<T> resultList ;
-		
-		//全部执行完成
-		public boolean isComplete = true ;
-		
-		//全部完成消耗的时间
-		public long costtime = 0 ;
-		
-	}
 }
