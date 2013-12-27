@@ -16,7 +16,7 @@
 		<param-value>WEB-INF/spring-*.xml</param-value>
 	</context-param>
 	<!-- ====================================================== -->
-	<!-- 						Filter							-->
+	<!-- Filter -->
 	<!-- ====================================================== -->
 	<filter>
 		<filter-name>CharacterEncodingFilter</filter-name>
@@ -52,7 +52,7 @@
 	</filter-mapping>
 
 	<!-- ====================================================== -->
-	<!-- 						Listeners 						-->
+	<!-- Listeners -->
 	<!-- ====================================================== -->
 	<listener>
 		<listener-class>com.peiliping.frame.LogbackConfigListener</listener-class>
@@ -60,11 +60,8 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
-	<listener>
-		<listener-class>org.h2.server.web.DbStarter</listener-class>
-	</listener>
 	<!-- ====================================================== -->
-	<!-- 						Servlet Mappings 				-->
+	<!-- Servlet Mappings -->
 	<!-- ====================================================== -->
 	<servlet>
 		<servlet-name>spring</servlet-name>
@@ -89,7 +86,7 @@
 		<url-pattern>/druid/*</url-pattern>
 	</servlet-mapping>
 	<!-- ====================================================== -->
-	<!-- 							OTHER 						-->
+	<!-- OTHER -->
 	<!-- ====================================================== -->
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
