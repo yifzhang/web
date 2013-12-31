@@ -28,6 +28,8 @@
         <property name="minIdle" value="5"/>
         <property name="maxActive" value="50"/>
     	
+    	<property name="maxWait" value="5000" />
+    	
     	<property name="filters" value="stat,slf4j" />
     	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
     	<property name="timeBetweenLogStatsMillis" value="120000" />
