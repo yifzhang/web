@@ -14,7 +14,11 @@ public interface IStorage<T> {
 	 */
 	public boolean isFull() ;
 	public boolean isEmpty();
+	public boolean is3();
+	public boolean is5();
 	public boolean is10();
+	public boolean is20();
+	public boolean is50();
 	public boolean is80();
 	/**
 	 *当前容器中的数量 

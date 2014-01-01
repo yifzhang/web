@@ -8,6 +8,8 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 
 	protected Timer timer = new Timer();
 	
+	private  boolean prepareforremove = false ;
+	
 	public Consumers(int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
 		super(concurrencyThreadsNum ,storage);
 		timer.schedule(new TimerTask() {
@@ -16,9 +18,15 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 				if(getStorage().is80()){
 					addOne(getInstance());
 				}
-				if(getStorage().is10() && getThreads().size() > getMinThreadsNum()){
-					removeOne();
+				
+				if(getStorage().is3() && getThreads().size() > getMinThreadsNum()){
+					if(prepareforremove){
+						removeOne();
+					}
+					prepareforremove = !prepareforremove ;
+					return ;
 				}
+				prepareforremove = false ;
 			}
 		}, checktime, checktime);
 	}

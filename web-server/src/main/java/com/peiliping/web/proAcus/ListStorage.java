@@ -42,8 +42,24 @@ public class ListStorage<V> implements IStorage<V> {
 		return storage == null ? false : storage.size()/Double.valueOf(capacity) >=0.8;
 	}
 	@Override
+	public boolean is50() {
+		return storage == null ? false : storage.size()/Double.valueOf(capacity) >=0.5;
+	}
+	@Override
+	public boolean is20() {
+		return storage == null ? false : storage.size()/Double.valueOf(capacity) <=0.2;
+	}
+	@Override
 	public boolean is10() {
 		return storage == null ? false : storage.size()/Double.valueOf(capacity) <=0.1;
+	}
+	@Override
+	public boolean is5() {
+		return storage == null ? false : storage.size()/Double.valueOf(capacity) <=0.05;
+	}
+	@Override
+	public boolean is3() {
+		return storage == null ? false : storage.size()/Double.valueOf(capacity) <=0.05;
 	}
 	@Override
 	public boolean isEmpty(){
