@@ -8,25 +8,27 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 
 	protected Timer timer = new Timer();
 	
-	private  boolean prepareforremove = false ;
+	private  int prepareforremove = 0 ;
 	
 	public Consumers(int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
 		super(concurrencyThreadsNum ,storage);
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(getStorage().is80()){
+				if(getStorage().isdayu(0.7)){
 					addOne(getInstance());
 				}
 				
-				if(getStorage().is3() && getThreads().size() > getMinThreadsNum()){
-					if(prepareforremove){
+				if(getStorage().isxiaoyu(0.01) && getThreads().size() > getMinThreadsNum()){
+					if(prepareforremove >= 3 ){
 						removeOne();
+						prepareforremove = 0 ;
+						return ;
 					}
-					prepareforremove = !prepareforremove ;
+					prepareforremove ++ ;
 					return ;
 				}
-				prepareforremove = false ;
+				prepareforremove = 0 ;
 			}
 		}, checktime, checktime);
 	}

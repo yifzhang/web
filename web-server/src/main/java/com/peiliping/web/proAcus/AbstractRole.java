@@ -42,6 +42,12 @@ public abstract class AbstractRole<V> {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public void run(int n){
+		for(int i=0;i<n;i++)
+			run(getInstance());
+	}
+	
 	public synchronized void removeOne(){
 		if(threads.size() == 0 || threads.size() <= minThreadsNum){
 			return ;

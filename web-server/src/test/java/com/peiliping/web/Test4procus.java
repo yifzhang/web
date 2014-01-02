@@ -1,8 +1,5 @@
 package com.peiliping.web;
 
-import java.util.Random;
-import java.util.RandomAccess;
-
 import com.peiliping.web.proAcus.Consumers;
 import com.peiliping.web.proAcus.IStorage;
 import com.peiliping.web.proAcus.ListStorage;
@@ -12,14 +9,13 @@ public class Test4procus {
 
 	public static void main(String[] args) throws InterruptedException {
 		
-		final IStorage<String> s = new ListStorage<String>(100);
+		final IStorage<String> s = new ListStorage<String>(1000);
 		Consumers<String> cs = new Consumers<String>(10, s,3000) {
 			@Override
 			public ConsumerActionThread<String> getInstance() {
 				return new ConsumerActionThread<String>(s, 500) {
 					@Override
 					public void doConsume(String v) {
-//						System.out.println("DEL:"+v);
 						try {
 							Thread.sleep(100);
 						} catch (InterruptedException e) {
@@ -28,7 +24,9 @@ public class Test4procus {
 				};
 			}
 		};
-		cs.run(cs.getInstance());
+		
+		cs.setMinThreadsNum(6);
+		cs.run(3);
 		
 		Producers<String> ps = new Producers<String>(10,s) {
 			@Override
@@ -37,7 +35,6 @@ public class Test4procus {
 					@Override
 					public void doProduce() {
 						getStorage().add("ABC");
-//						System.out.println("ADD:ABC" );
 						try {
 							Thread.sleep(50);
 						} catch (InterruptedException e) {
@@ -47,8 +44,7 @@ public class Test4procus {
 			}
 		};
 		
-		ps.run(ps.getInstance());ps.run(ps.getInstance());
-		ps.run(ps.getInstance());
+		ps.run(4);
 		
 		while(true){
 			System.out.println("Storage" + s.size() + "Consumer" + cs.getPool().getActiveCount() + "Producer" + ps.getPool().getActiveCount());
