@@ -2,8 +2,8 @@ package com.peiliping.web.server.proAcus;
 
 public abstract class Producers<V> extends AbstractRole<V> {
 
-	public Producers(int concurrencyThreadsNum, IStorage<V> storage) {
-		super(concurrencyThreadsNum ,storage);
+	public Producers(String name,int concurrencyThreadsNum, IStorage<V> storage) {
+		super(name,concurrencyThreadsNum ,storage);
 	}
 	
 	public abstract ProducerActionThread<V> getInstance();

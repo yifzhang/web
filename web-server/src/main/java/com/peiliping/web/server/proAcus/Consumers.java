@@ -13,11 +13,12 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 	public volatile double DEL_LEVEL = 0.02;
 	
 	
-	public Consumers(int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
-		super(concurrencyThreadsNum ,storage);
+	public Consumers(String name,int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
+		super(name,concurrencyThreadsNum ,storage);
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
+				logger.warn("ActiveThread:" + getPool().getActiveCount() + "\t" + "Storage:" + getStorage().size());
 				if(getStorage().isdayu(ADD_LEVEL)){
 					addOne(getInstance());
 				}else if(getStorage().isxiaoyu(DEL_LEVEL) && canRemoveOne()){

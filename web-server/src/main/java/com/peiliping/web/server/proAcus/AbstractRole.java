@@ -7,6 +7,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,10 +30,13 @@ public abstract class AbstractRole<V> {
 	@Getter
 	protected List<AbstractActionThread<V>>  threads ; 
 
-	public AbstractRole(int concurrencyThreadsNum,IStorage<V> storage) {
+	protected Logger logger;
+
+	public AbstractRole(String name,int concurrencyThreadsNum,IStorage<V> storage) {
 		this.pool = new ThreadPoolExecutor(concurrencyThreadsNum,maxThreadsNum, 0L, TimeUnit.MILLISECONDS,new LinkedBlockingQueue<Runnable>()); 
 		this.storage = storage;
 		this.threads = new ArrayList<AbstractActionThread<V>>();
+		logger = LoggerFactory.getLogger(name);
 	}
 	
 	public synchronized void run(AbstractActionThread<V> ...tmp_threads) {
