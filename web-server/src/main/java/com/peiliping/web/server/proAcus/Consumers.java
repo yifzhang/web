@@ -7,16 +7,20 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 
 	protected Timer timer = new Timer();
 	private  int prepareforremove = 0 ;
-	private  final static int REMOVE_LEVEL = 2;
+	
+	public volatile int REMOVE_LEVEL = 2;
+	public volatile double ADD_LEVEL = 0.7;
+	public volatile double DEL_LEVEL = 0.02;
+	
 	
 	public Consumers(int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
 		super(concurrencyThreadsNum ,storage);
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
-				if(getStorage().isdayu(0.7)){
+				if(getStorage().isdayu(ADD_LEVEL)){
 					addOne(getInstance());
-				}else if(getStorage().isxiaoyu(0.01) && canRemoveOne()){
+				}else if(getStorage().isxiaoyu(DEL_LEVEL) && canRemoveOne()){
 					if(prepareforremove >= REMOVE_LEVEL ){	removeOne(); }
 					prepareforremove = prepareforremove >= REMOVE_LEVEL ? 0 : prepareforremove + 1;
 					return ;

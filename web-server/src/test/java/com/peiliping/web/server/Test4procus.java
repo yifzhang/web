@@ -25,7 +25,7 @@ public class Test4procus {
 			}
 		};
 		
-		cs.setMinThreadsNum(6);
+		cs.setMinThreadsNum(3);
 		cs.run(2);
 		
 		Producers<String> ps = new Producers<String>(10,s) {
