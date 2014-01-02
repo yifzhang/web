@@ -1,4 +1,4 @@
-package com.peiliping.web.monitor;
+package com.peiliping.web.server.monitor;
 
 import org.slf4j.Logger;
 

@@ -1,6 +1,6 @@
-package com.peiliping.web.dao;
+package com.peiliping.web.server.dao;
 
-import com.peiliping.web.dataobject.KV;
+import com.peiliping.web.server.dataobject.KV;
 
 public interface KVDAO {
 	

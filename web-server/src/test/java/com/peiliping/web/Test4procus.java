@@ -1,9 +1,11 @@
 package com.peiliping.web;
 
-import com.peiliping.web.proAcus.Consumers;
-import com.peiliping.web.proAcus.IStorage;
-import com.peiliping.web.proAcus.ListStorage;
-import com.peiliping.web.proAcus.Producers;
+import com.peiliping.web.server.proAcus.Consumers;
+import com.peiliping.web.server.proAcus.Consumers.ConsumerActionThread;
+import com.peiliping.web.server.proAcus.IStorage;
+import com.peiliping.web.server.proAcus.ListStorage;
+import com.peiliping.web.server.proAcus.Producers;
+import com.peiliping.web.server.proAcus.Producers.ProducerActionThread;
 
 public class Test4procus {
 

@@ -1,4 +1,4 @@
-package com.peiliping.web.paialleltool;
+package com.peiliping.web.server.paialleltool;
 
 import java.util.List;
 import java.util.concurrent.Callable;

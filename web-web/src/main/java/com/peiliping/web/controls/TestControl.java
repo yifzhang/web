@@ -2,8 +2,6 @@ package com.peiliping.web.controls;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.peiliping.web.dao.KVDAO;
-import com.peiliping.web.dataobject.KV;
-import com.peiliping.web.tools.MapX;
-import com.peiliping.web.tools.SpringContextHolder;
+import com.peiliping.web.server.dao.KVDAO;
+import com.peiliping.web.server.dataobject.KV;
+import com.peiliping.web.server.tools.MapX;
+import com.peiliping.web.server.tools.SpringContextHolder;
 
 @Controller
 public class TestControl {

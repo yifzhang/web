@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import com.peiliping.web.paialleltool.SharePoolPaiallelTool;
+import com.peiliping.web.server.paialleltool.SharePoolPaiallelTool;
 
 public class PaiallelPoolTest {
 

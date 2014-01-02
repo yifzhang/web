@@ -1,4 +1,4 @@
-package com.peiliping.web.tools;
+package com.peiliping.web.server.tools;
 
 import java.util.HashMap;
 import java.util.Map;

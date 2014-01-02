@@ -1,4 +1,4 @@
-package com.peiliping.web.proAcus;
+package com.peiliping.web.server.proAcus;
 
 public interface IStorage<T> {
 	/**

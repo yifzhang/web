@@ -1,4 +1,4 @@
-package com.peiliping.web.cache.LRU;
+package com.peiliping.web.server.cache.LRU;
 
 public class CacheItem {
 

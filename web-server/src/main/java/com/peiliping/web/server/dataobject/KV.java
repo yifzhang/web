@@ -1,9 +1,9 @@
-package com.peiliping.web.dataobject;
-
-import org.apache.ibatis.type.Alias;
+package com.peiliping.web.server.dataobject;
 
 import lombok.Getter;
 import lombok.Setter;
+
+import org.apache.ibatis.type.Alias;
 
 @Alias("KV")
 public class KV {

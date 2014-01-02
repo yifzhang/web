@@ -1,4 +1,4 @@
-package com.peiliping.web.monitor;
+package com.peiliping.web.server.monitor;
 
 public class MonitorResult {
 

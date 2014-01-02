@@ -1,4 +1,4 @@
-package com.peiliping.web.tools;
+package com.peiliping.web.server.tools;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

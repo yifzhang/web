@@ -56,13 +56,13 @@
     </bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.peiliping.web.dao" />
+		<property name="basePackage" value="com.peiliping.web.server.dao" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="wrappedDataSource" />
 		<property name="configLocation" value="classpath:mybatis-configuration.xml" />
-		<property name="typeAliasesPackage" value="com.peiliping.web.dataobject" />
+		<property name="typeAliasesPackage" value="com.peiliping.web.server.dataobject" />
 	</bean>
 	
 </beans>

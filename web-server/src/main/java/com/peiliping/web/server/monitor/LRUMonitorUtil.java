@@ -1,4 +1,4 @@
-package com.peiliping.web.monitor;
+package com.peiliping.web.server.monitor;
 
 import java.util.Iterator;
 import java.util.Timer;
@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 
-import com.peiliping.web.cache.LRU.LRUCache;
+import com.peiliping.web.server.cache.LRU.LRUCache;
 
 public class LRUMonitorUtil implements IMonitorUtil{
 
