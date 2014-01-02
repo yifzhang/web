@@ -9,7 +9,7 @@ public class Test4procus {
 
 	public static void main(String[] args) throws InterruptedException {
 		
-		final IStorage<String> s = new ListStorage<String>(1000);
+		final IStorage<String> s = new ListStorage<String>(100);
 		Consumers<String> cs = new Consumers<String>(10, s,3000) {
 			@Override
 			public ConsumerActionThread<String> getInstance() {
@@ -26,7 +26,7 @@ public class Test4procus {
 		};
 		
 		cs.setMinThreadsNum(6);
-		cs.run(3);
+		cs.run(2);
 		
 		Producers<String> ps = new Producers<String>(10,s) {
 			@Override
@@ -44,7 +44,7 @@ public class Test4procus {
 			}
 		};
 		
-		ps.run(4);
+		ps.run(3);
 		
 		while(true){
 			System.out.println("Storage" + s.size() + "Consumer" + cs.getPool().getActiveCount() + "Producer" + ps.getPool().getActiveCount());

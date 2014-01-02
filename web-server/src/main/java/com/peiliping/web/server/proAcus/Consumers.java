@@ -3,12 +3,11 @@ package com.peiliping.web.server.proAcus;
 import java.util.Timer;
 import java.util.TimerTask;
 
-
 public abstract class Consumers<V> extends AbstractRole<V> {
 
 	protected Timer timer = new Timer();
-	
 	private  int prepareforremove = 0 ;
+	private  final static int REMOVE_LEVEL = 2;
 	
 	public Consumers(int concurrencyThreadsNum, IStorage<V> storage,long checktime) {
 		super(concurrencyThreadsNum ,storage);
@@ -17,15 +16,9 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 			public void run() {
 				if(getStorage().isdayu(0.7)){
 					addOne(getInstance());
-				}
-				
-				if(getStorage().isxiaoyu(0.01) && getThreads().size() > getMinThreadsNum()){
-					if(prepareforremove >= 3 ){
-						removeOne();
-						prepareforremove = 0 ;
-						return ;
-					}
-					prepareforremove ++ ;
+				}else if(getStorage().isxiaoyu(0.01) && canRemoveOne()){
+					if(prepareforremove >= REMOVE_LEVEL ){	removeOne(); }
+					prepareforremove = prepareforremove >= REMOVE_LEVEL ? 0 : prepareforremove + 1;
 					return ;
 				}
 				prepareforremove = 0 ;
@@ -34,7 +27,6 @@ public abstract class Consumers<V> extends AbstractRole<V> {
 	}
 	
 	public abstract ConsumerActionThread<V> getInstance();
-
 	
 	public abstract class ConsumerActionThread<K> extends AbstractActionThread<K> {
 

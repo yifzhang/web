@@ -17,7 +17,7 @@ public abstract class AbstractRole<V> {
 	@Getter
 	protected IStorage<V> storage;
 	@Getter
-	protected int maxThreadsNum = 100 ;
+	private final static int maxThreadsNum = 50 ;
 	@Getter
 	@Setter
 	protected int minThreadsNum = 1 ;
@@ -49,19 +49,25 @@ public abstract class AbstractRole<V> {
 	}
 	
 	public synchronized void removeOne(){
-		if(threads.size() == 0 || threads.size() <= minThreadsNum){
-			return ;
-		}
+		if(!canRemoveOne()){return ;}
 		AbstractActionThread<V> t = threads.remove(0);
 		t.dropstatus = true ;
 		pool.remove(t);
 	}
 	
+	public boolean canRemoveOne(){
+		return threads.size() > minThreadsNum ;
+	}
+	
 	public synchronized void addOne(AbstractActionThread<V> thread){
-		if( threads.size() + 1 <= maxThreadsNum ){;
+		if( canAddOne()){;
 			threads.add(thread);
 			pool.execute(thread);
 		}
+	}
+	
+	public boolean canAddOne(){
+		return threads.size() + 1 <= maxThreadsNum ;
 	}
 	
 	public abstract AbstractActionThread<V> getInstance();
