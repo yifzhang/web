@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.peiliping.web.dao.KVDAO;
 import com.peiliping.web.dataobject.KV;
 import com.peiliping.web.tools.MapX;
-import com.peiliping.web.tools.SpringApplicationContextHolder;
+import com.peiliping.web.tools.SpringContextHolder;
 
 @Controller
 public class TestControl {
@@ -41,7 +41,7 @@ public class TestControl {
 		logger.error("testfm");
 		ModelAndView mv = new ModelAndView("testfm");
 		mv.addObject("name", "My First Spring Mvc");
-		String[] l = SpringApplicationContextHolder.getBeanDefinitionNames();
+		String[] l = SpringContextHolder.getBeanDefinitionNames();
 		for (String i : l) {
 			logger.error(i);
 		}
