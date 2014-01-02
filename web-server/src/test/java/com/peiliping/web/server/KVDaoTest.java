@@ -1,4 +1,4 @@
-package com.peiliping.web;
+package com.peiliping.web.server;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
