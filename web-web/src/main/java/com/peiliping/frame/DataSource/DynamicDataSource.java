@@ -29,6 +29,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			DataSource ds = InitDataSourceTools.getDruidDataSource(e.getValue());
 			tmp_targetDataSources.put(e.getKey(), ds);
 		}
+		super.setTargetDataSources(tmp_targetDataSources);
 		super.afterPropertiesSet();
 	}
 
