@@ -15,11 +15,14 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
+	protected final static int PORT = 20000 ; //监听端口使用
+	
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
-
 	@Getter
 	@Setter
 	protected String configserverUrl;
+	@Getter
+	protected boolean updateListener = false ;
 
 	@SuppressWarnings("rawtypes")
 	@Override
@@ -50,6 +53,22 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		return mp ;
 	}
 	
+	@SuppressWarnings("rawtypes")
+	public boolean updateDataousrce(Map<String,Map>  map){
+		for(Entry<String,Map> e :  map.entrySet()){
+			Object o = tmp_targetDataSources.get(e.getKey());
+			tmp_targetDataSources.put(e.getKey(),InitDataSourceTools.getDruidDataSource(e.getValue()));
+			if(o !=null && o instanceof DruidDataSource){
+				try{
+					((DruidDataSource)e.getValue()).close();					
+				}catch(Throwable ex){
+					//TODO 打印日志
+				}
+			}
+		}
+		return true ;
+	}
+	
 	public void close(){
 		for(Entry<Object,Object> e :  tmp_targetDataSources.entrySet()){
 			if(e.getValue() instanceof DruidDataSource){
@@ -60,5 +79,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 				}
 			}
 		}
+	}
+
+	public void setUpdateListener(boolean updateListener) {
+		this.updateListener = updateListener;
+		//TODO 启动监听服务
+		
 	}
 }
