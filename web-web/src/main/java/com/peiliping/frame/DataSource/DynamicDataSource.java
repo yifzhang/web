@@ -15,8 +15,6 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
-	protected final static int PORT = 20000 ; //监听端口使用
-	
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
 	@Getter
 	@Setter
@@ -28,9 +26,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@Override
 	public void afterPropertiesSet() {
 		Map<String,Map> map = getProperties();
-		for(Entry<String,Map> e : map.entrySet()){
-			DataSource ds = InitDataSourceTools.getDruidDataSource(e.getValue());
-			tmp_targetDataSources.put(e.getKey(), ds);
+		if (map.size() > 0) {
+			for (Entry<String, Map> e : map.entrySet()) {
+				DataSource ds = InitDataSourceTools.getDruidDataSource(e.getValue());
+				tmp_targetDataSources.put(e.getKey(), ds);
+			}
 		}
 		super.setTargetDataSources(tmp_targetDataSources);
 		super.afterPropertiesSet();
