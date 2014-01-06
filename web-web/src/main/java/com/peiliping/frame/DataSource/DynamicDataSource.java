@@ -48,7 +48,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected String updateuri = null ;  //接收动态更新数据源的地址
 	@Getter
 	@Setter
-	protected String dsName = null ;  //一组数据源的名字
+	protected String dsname = null ;  //一组数据源的名字
 	
 
 	@SuppressWarnings("rawtypes")
@@ -63,7 +63,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		}
 		super.setTargetDataSources(tmp_targetDataSources);
 		super.afterPropertiesSet();
-		reg.put(dsName,this);
+		reg.put(dsname,this);
 	}
 
 	@Override
@@ -79,7 +79,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@SuppressWarnings("rawtypes")
 	protected Map<String,Map> getProperties(){
 		Map<String,Map> mp = new HashMap<String,Map>();
-		String result = httpconnnect(configserver_host + configserver_update  + "?dsname=" + dsName );
+		String result = httpconnnect(configserver_host + configserver_update  + "?dsname=" + dsname );
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map>>(){}.getType() );
 		return mp ;
 	}
@@ -117,7 +117,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	public void setUpdateListener(boolean updateListener) {
 		this.updateListener = updateListener;
-		httpconnnect(configserver_host + configserver_reg + "?dsname=" + dsName +"&port="+ updateport + "&uri" + updateuri + "&ip" + "");
+		httpconnnect(configserver_host + configserver_reg + "?dsname=" + dsname +"&port="+ updateport + "&uri" + updateuri + "&ip" + "");
 	}
 	
 	public static String httpconnnect(String url) {
