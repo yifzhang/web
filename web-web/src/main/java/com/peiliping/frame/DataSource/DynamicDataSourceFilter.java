@@ -30,6 +30,8 @@ public class DynamicDataSourceFilter implements Filter {
 			DynamicDataSource d = DynamicDataSource.reg.get((String)request.getAttribute(PARAM_DSNAME));
 			if(d!=null)
 				d.updateDataousrce();
+			
+			//TODO 返回结果
 		}
 	}
 
