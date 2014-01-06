@@ -1,5 +1,9 @@
 package com.peiliping.frame.DataSource;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,15 +16,28 @@ import lombok.Setter;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.LongSerializationPolicy;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
+	
+	private static Gson GSON = new GsonBuilder().setLongSerializationPolicy(LongSerializationPolicy.STRING).disableHtmlEscaping().create();
 	
 	public static Map<String ,DynamicDataSource> reg = new HashMap<String, DynamicDataSource>();  
 	
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
 	@Getter
 	@Setter
-	protected String configserverUrl;
+	protected String configserver_host;
+	@Getter
+	@Setter
+	protected String configserver_reg;
+	@Getter
+	@Setter
+	protected String configserver_update;
+	
 	@Getter
 	protected boolean updateListener = false ;  //接收动态更新数据源的通知
 	@Getter
@@ -62,7 +79,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@SuppressWarnings("rawtypes")
 	protected Map<String,Map> getProperties(){
 		Map<String,Map> mp = new HashMap<String,Map>();
-		//TODO  request configserverUrl & convert to map
+		String result = httpconnnect(configserver_host + configserver_update  + "?dsname=" + dsName );
+		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map>>(){}.getType() );
 		return mp ;
 	}
 	
@@ -99,6 +117,31 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
 	public void setUpdateListener(boolean updateListener) {
 		this.updateListener = updateListener;
-		//TODO  发送请求 给configserver 提交自己 ip:port/uri?dsName=dsName
+		httpconnnect(configserver_host + configserver_reg + "?dsname=" + dsName +"&port="+ updateport + "&uri" + updateuri + "&ip" + "");
+	}
+	
+	public static String httpconnnect(String url) {
+		//TODO 优化实现
+		HttpURLConnection connection = null  ;
+		try {
+			URL u = new URL(url);
+			connection = (HttpURLConnection) u.openConnection();
+	        connection.setRequestMethod("GET");
+	        connection.connect();
+	        BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        StringBuffer sb = new StringBuffer();
+	        String content = "";
+	        while ((content = br.readLine()) != null)
+	        {
+	            sb.append(content + "\n");
+	        }
+	        return sb.toString();
+		} catch (Exception e) {
+		}finally{
+			if(connection !=null){
+				connection.disconnect();
+			}
+		}
+		return "";
 	}
 }
