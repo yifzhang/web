@@ -8,11 +8,16 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 public class DynamicDataSourceFilter implements Filter {
 
-	private static final String UPDATE_COMMOND = "dynamicdatasourceupdate";
+	public static final String URI = "dynamicdatasource";
+	
+	private static final String PARAM_CMD = "cmd";
+	private static final String PARAM_DSNAME = "dsname";
+	
+	private static final String PARAM_COMMOND_UPDATE = "update" ;
+	
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {		
@@ -20,13 +25,25 @@ public class DynamicDataSourceFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain) throws IOException, ServletException {
-		String uri = ((HttpServletRequest) request).getRequestURI();
-		if(uri.equals(UPDATE_COMMOND)){
-			DynamicDataSource d = DynamicDataSource.reg.get(request.getAttribute("dsname"));
-			d.updateDataousrce();
+		String cmd = String.valueOf(request.getAttribute(PARAM_CMD));
+		if(cmd.equals(PARAM_COMMOND_UPDATE)){
+			DynamicDataSource d = DynamicDataSource.reg.get((String)request.getAttribute(PARAM_DSNAME));
+			if(d!=null)
+				d.updateDataousrce();
 		}
 	}
 
 	@Override
 	public void destroy() {	}
 }
+
+/*
+	<filter>
+		<filter-name>DynamicDataSourceFilter</filter-name>
+		<filter-class>com.peiliping.DataSource.DynamicDataSourceFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>DynamicDataSourceFilter</filter-name>
+		<url-pattern>/dynamicdatasource</url-pattern>
+	</filter-mapping> 
+*/
