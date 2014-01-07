@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.peiliping.web.server.dao.KVDAO;
 import com.peiliping.web.server.dataobject.KV;
+import com.peiliping.web.server.repository.KVRepo;
 import com.peiliping.web.server.tools.MapX;
 import com.peiliping.web.server.tools.SpringContextHolder;
 
@@ -19,7 +19,7 @@ import com.peiliping.web.server.tools.SpringContextHolder;
 public class TestControl {
 
 	@Autowired
-	private KVDAO kvDAO;
+	private KVRepo kvDAO;
 
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 

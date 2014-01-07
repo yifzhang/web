@@ -14,6 +14,10 @@
 	<mvc:annotation-driven />
 	<mvc:default-servlet-handler />
 	<context:component-scan base-package="com.peiliping.web.controls" />
+	<context:component-scan base-package="com.peiliping.web.server.service" />
+	<context:component-scan base-package="com.peiliping.web.server.repository" />
+	<context:component-scan base-package="com.peiliping.web.component" />
+	<context:component-scan base-package="com.peiliping.web.server.component" />
 
 	<bean id="jspview" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/jsp/"></property>
