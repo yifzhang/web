@@ -59,6 +59,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@Getter
 	@Setter
 	protected String dynamicDataSourceName = null ;  //动态数据源的名字
+	@Getter
+	@Setter
+	protected boolean needRemote = false ;  //是否需要远程获取数据源
 	
 	public static final String TOKEN_GET_ALL = "getall";
 	
@@ -94,6 +97,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@SuppressWarnings({ "rawtypes", "serial" })
 	protected Map<String,Map> getProperties(String token){
 		Map<String,Map> mp = new HashMap<String,Map>();
+		if(!needRemote){ return mp;	}
 		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token );
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map>>(){}.getType() );
 		log.warn("Dynamic Data Source Property : " + result );
