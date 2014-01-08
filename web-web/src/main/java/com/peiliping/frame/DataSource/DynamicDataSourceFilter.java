@@ -1,6 +1,7 @@
 package com.peiliping.frame.DataSource;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -9,16 +10,18 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DynamicDataSourceFilter implements Filter {
 
+	protected static Logger log = LoggerFactory.getLogger(DynamicDataSource.class);
 	public static final String URI = "dynamicdatasource";
-	
 	private static final String PARAM_CMD = "cmd";
-	private static final String PARAM_DSNAME = "dsname";
-	
 	private static final String PARAM_COMMOND_UPDATE = "update" ;
-	
-	
+	public static final String PARAM_DSNAME = "dynamicdatasourcename";
+	public static final String PARAM_TOKEN = "token" ;
+		
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {		
 	}
@@ -28,11 +31,19 @@ public class DynamicDataSourceFilter implements Filter {
 		String cmd = String.valueOf(request.getAttribute(PARAM_CMD));
 		if(cmd.equals(PARAM_COMMOND_UPDATE)){
 			DynamicDataSource d = DynamicDataSource.reg.get((String)request.getAttribute(PARAM_DSNAME));
-			if(d!=null)
-				d.updateDataousrce();
-			
-			//TODO 返回结果
+			if(d!=null){
+				boolean status  = d.updateDataousrce((String)request.getAttribute(PARAM_TOKEN));
+				buildResponse(response, status ? "OK" : "ERROR");
+			}else{
+				buildResponse(response, "ERROR");
+			}			
 		}
+	}
+	
+	public static void buildResponse(ServletResponse response,String result) throws IOException{
+		 response.setContentType("text/html;charset=UTF-8");
+	     PrintWriter writer = response.getWriter();
+	     writer.println(result);
 	}
 
 	@Override
