@@ -38,8 +38,11 @@
     
     <bean id="vpsDynamicDataSource" class="com.peiliping.frame.DataSource.DynamicDataSource" >
     	<property name="dynamicDataSourceName" value="vpsds" />
-		<property name="needRemote" value="true" />
-		<property name="needregist" value="true" />
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="vpsds" value-ref="dataSource" />
+			</map>
+		</property>
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 	</bean>
 

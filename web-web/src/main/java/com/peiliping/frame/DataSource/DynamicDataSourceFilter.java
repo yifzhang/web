@@ -9,6 +9,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +29,12 @@ public class DynamicDataSourceFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,FilterChain chain) throws IOException, ServletException {
-		String cmd = String.valueOf(request.getAttribute(PARAM_CMD));
+		HttpServletRequest req = (HttpServletRequest)request;
+		String cmd = req.getParameter(PARAM_CMD);
 		if(cmd.equals(PARAM_COMMOND_UPDATE)){
-			DynamicDataSource d = DynamicDataSource.reg.get((String)request.getAttribute(PARAM_DSNAME));
+			DynamicDataSource d = DynamicDataSource.reg.get(req.getParameter(PARAM_DSNAME));
 			if(d!=null){
-				boolean status  = d.updateDataousrce((String)request.getAttribute(PARAM_TOKEN));
+				boolean status  = d.updateDataousrce((String)req.getParameter(PARAM_TOKEN));
 				buildResponse(response, status ? "OK" : "ERROR");
 			}else{
 				buildResponse(response, "ERROR");

@@ -50,7 +50,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected String configserver_datasource = "/datasource?";
 	
 	@Getter
-	protected boolean updateListener = false ;  //接收动态更新数据源的通知
+	protected boolean needregist = false ;  //启动时向configserver注册
 	@Getter
 	@Setter
 	protected int updateport = 8080  ;  //响应的端口
@@ -100,7 +100,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		Map<String,Map> mp = new HashMap<String,Map>();
 		if(!needRemote){ return mp;	}
 		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token );
-		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map>>(){}.getType() );
+		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map<String,String>>>(){}.getType() );
 		log.warn("Dynamic Data Source Property : " + result );
 		return mp ;
 	}
@@ -113,15 +113,18 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		}
 		for (Entry<String, Map> e : map.entrySet()) {
 			Object o = tmp_targetDataSources.get(e.getKey());
-			tmp_targetDataSources.put(e.getKey(),InitDataSourceTools.getDruidDataSource(e.getValue()));
+			DataSource newds = InitDataSourceTools.getDruidDataSource(e.getValue());
+			tmp_targetDataSources.put(e.getKey(),newds);
+			
 			if (o != null && o instanceof DruidDataSource) {
 				try {
-					((DruidDataSource) e.getValue()).close();
+					((DruidDataSource) o).close();
 				} catch (Throwable ex) {
 					log.error("close datasource error : " + e.getKey(), ex);
 				}
 			}
 		}
+		super.afterPropertiesSet();
 		return true;
 	}
 	
@@ -135,14 +138,13 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 				}
 			}
 		}
-	}
+	}	
 
-	public void setUpdateListener(boolean updateListener) {
-		this.updateListener = updateListener;
-		if(updateListener){
+	public void setNeedregist(boolean needregist) {
+		this.needregist = needregist;
+		if(needregist)
 			httpconnnect(configserver_host + configserver_reg + 
-					DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + getLocalIP());
-		}
+				DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + getLocalIP());
 	}
 	
 	public static String getLocalIP(){
@@ -195,6 +197,5 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			}
 		}
 		throw new IllegalArgumentException("Try my best,but failed![" + url + "]" );
-	}
-	
+	}	
 }
