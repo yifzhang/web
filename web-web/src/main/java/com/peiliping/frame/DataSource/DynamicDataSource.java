@@ -28,6 +28,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
+import com.peiliping.web.server.repository.DataSourceContextHolder;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
@@ -40,7 +41,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
 	@Getter
 	@Setter
-	protected String configserver_host = "http://192.168.1.222"; 
+	protected String configserver_host = "http://127.0.0.1"; 
 	@Getter
 	@Setter
 	protected String configserver_reg = "/regist?";     // 

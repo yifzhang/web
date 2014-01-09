@@ -43,7 +43,7 @@
 				<entry key="vpsds" value-ref="dataSource" />
 			</map>
 		</property>
-      	<property name="defaultTargetDataSource" ref="dataSource" />
+		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

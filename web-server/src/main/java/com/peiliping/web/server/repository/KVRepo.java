@@ -13,9 +13,10 @@ public class KVRepo {
 	private KVDAO kvDao;
 	
 	public KV getKV(String key){
-		if(StringUtils.isNotBlank(key))
+		if(StringUtils.isNotBlank(key)){
+			DataSourceContextHolder.setDataSourceName("vpsds");
 			return kvDao.getKV(key);
-		else 
+		}else 
 			return null;
 	}
 
