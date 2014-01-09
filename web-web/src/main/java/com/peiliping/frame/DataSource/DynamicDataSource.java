@@ -23,7 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -63,20 +62,21 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@Getter
 	@Setter
 	protected boolean needRemote = false ;  //是否需要远程获取数据源
+	@Getter
+	@Setter
+	protected String dataSourceClassName = "com.alibaba.druid.pool.DruidDataSource" ;
 	
 	public static final String TOKEN_GET_ALL = "getall";
 	
-
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void afterPropertiesSet() {
 		if(StringUtils.isBlank(dynamicDataSourceName)){
 			Validate.notNull(null,"dynamicDataSourceName is null");
 		}
-		Map<String,Map> map = getProperties(TOKEN_GET_ALL);
+		Map<String,Map<String,String>> map = getProperties(TOKEN_GET_ALL);
 		if (map.size() > 0) {
-			for (Entry<String, Map> e : map.entrySet()) {
-				DataSource ds = InitDataSourceTools.getDruidDataSource(e.getValue());
+			for (Entry<String, Map<String,String>> e : map.entrySet()) {
+				DataSource ds =  IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue());
 				tmp_targetDataSources.put(e.getKey(), ds);
 			}
 		}
@@ -95,9 +95,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		tmp_targetDataSources.putAll(targetDataSources);
 	}
 	
-	@SuppressWarnings({ "rawtypes", "serial" })
-	protected Map<String,Map> getProperties(String token){
-		Map<String,Map> mp = new HashMap<String,Map>();
+	protected Map<String,Map<String,String>> getProperties(String token){
+		Map<String,Map<String,String>> mp = new HashMap<String,Map<String,String>>();
 		if(!needRemote){ return mp;	}
 		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token );
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map<String,String>>>(){}.getType() );
@@ -105,24 +104,15 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		return mp ;
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public boolean updateDataousrce(String token) {
-		Map<String, Map> map = getProperties(token);
+		Map<String, Map<String,String>> map = getProperties(token);
 		if (map == null || map.size() == 0) {
 			return false;
 		}
-		for (Entry<String, Map> e : map.entrySet()) {
+		for (Entry<String, Map<String,String>> e : map.entrySet()) {
 			Object o = tmp_targetDataSources.get(e.getKey());
-			DataSource newds = InitDataSourceTools.getDruidDataSource(e.getValue());
-			tmp_targetDataSources.put(e.getKey(),newds);
-			
-			if (o != null && o instanceof DruidDataSource) {
-				try {
-					((DruidDataSource) o).close();
-				} catch (Throwable ex) {
-					log.error("close datasource error : " + e.getKey(), ex);
-				}
-			}
+			tmp_targetDataSources.put(e.getKey(), IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue()));
+			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)o);
 		}
 		super.afterPropertiesSet();
 		return true;
@@ -130,13 +120,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	
 	public void close(){
 		for(Entry<Object,Object> e :  tmp_targetDataSources.entrySet()){
-			if(e.getValue() instanceof DruidDataSource){
-				try{
-					((DruidDataSource)e.getValue()).close();					
-				}catch(Throwable ex){
-					log.error("close datasource error : " + e.getKey()  ,ex);
-				}
-			}
+			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)e.getValue());
 		}
 	}	
 
