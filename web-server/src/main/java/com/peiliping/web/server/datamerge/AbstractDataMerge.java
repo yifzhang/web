@@ -1,6 +1,5 @@
 package com.peiliping.web.server.datamerge;
 
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,12 +34,7 @@ public abstract class AbstractDataMerge {
 			timer.schedule(new TimerTask() {
 				@Override
 				public void run() {
-					for(Entry<String, AtomicReference<AbstractData>> e : MAP.entrySet()){
-						if(e.getValue() != null && e.getValue().get() != null && e.getValue().get().getExpiretime() <  System.currentTimeMillis()){
-							MAP.remove(e.getKey());
-							e.getValue().get().cusumerAction() ;
-						}
-					}
+					cleanData();
 				}
 			}, 0, scheduleTime);
 		}
@@ -74,4 +68,15 @@ public abstract class AbstractDataMerge {
 			}
 		}
 	}
+	
+	protected abstract void cleanData();
+
+//  e.g.
+//	for(Entry<String, AtomicReference<AbstractData>> e : MAP.entrySet()){
+//		if(e.getValue() != null && e.getValue().get() != null && e.getValue().get().getExpiretime() <  System.currentTimeMillis()){
+//			MAP.remove(e.getKey());
+//			e.getValue().get().cusumerAction() ;
+//		}
+//	}
+	
 }
