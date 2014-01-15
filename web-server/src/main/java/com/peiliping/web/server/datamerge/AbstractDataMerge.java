@@ -9,11 +9,15 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.slf4j.Logger;
 
+import com.googlecode.concurrentlinkedhashmap.ConcurrentLinkedHashMap;
+import com.googlecode.concurrentlinkedhashmap.Weighers;
+
 public abstract class AbstractDataMerge {
 	
 	protected String name ; 	
 	protected Logger logger;
 	
+	protected boolean lru ;
 	protected ConcurrentMap<String, AtomicReference<AbstractData>> MAP;
 	protected int map_size = 1000 ;
 	
@@ -23,11 +27,13 @@ public abstract class AbstractDataMerge {
 	protected long starttime = System.currentTimeMillis();	
 	protected Timer timer ;
 	
-	public AbstractDataMerge (String name,Logger logger,int maxsize,boolean needScheduleClean,long scheduleTime){
+	public AbstractDataMerge (String name,Logger logger,int maxsize,boolean needScheduleClean,long scheduleTime,boolean lru){
 		this.name = name ;
 		this.logger = logger;
 		this.map_size = maxsize;
-		this.MAP = new ConcurrentHashMap<String, AtomicReference<AbstractData>>(map_size/4);
+		this.lru = lru ;
+		this.MAP = lru ? new ConcurrentLinkedHashMap.Builder<String, AtomicReference<AbstractData>>().maximumWeightedCapacity(maxsize).weigher(Weighers.singleton()).build() 
+				       : new ConcurrentHashMap<String, AtomicReference<AbstractData>>(map_size/4);
 		this.needScheduleClean = needScheduleClean ;
 		if(needScheduleClean){
 			timer = new Timer() ;
@@ -59,7 +65,8 @@ public abstract class AbstractDataMerge {
 		while (true) {
 			ref = MAP.get(data.getName());
 			if (ref == null) {
-				if(MAP.size()> map_size ) return false;
+				if(!lru && MAP.size()> map_size ) return false;
+				if(lru && MAP.size()> map_size * 2 ) return false;
 				ref = new AtomicReference<AbstractData>();
 				if(MAP.putIfAbsent(data.getName(), ref) !=null ){
 					continue;
