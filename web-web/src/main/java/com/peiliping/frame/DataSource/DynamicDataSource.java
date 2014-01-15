@@ -95,6 +95,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		tmp_targetDataSources.putAll(targetDataSources);
 	}
 	
+	@SuppressWarnings("serial")
 	protected Map<String,Map<String,String>> getProperties(String token){
 		Map<String,Map<String,String>> mp = new HashMap<String,Map<String,String>>();
 		if(!needRemote){ return mp;	}
