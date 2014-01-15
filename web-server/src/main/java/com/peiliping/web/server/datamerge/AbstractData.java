@@ -6,7 +6,7 @@ public abstract class AbstractData {
 	@Getter
 	protected long id ;
 	@Getter
-	protected String name ;
+	protected String name ;  //保存在MAP的key
 	@Getter
 	protected String type ;
 	@Getter

@@ -15,7 +15,7 @@ public abstract class AbstractDataMerge {
 	protected Logger logger;
 	
 	protected ConcurrentMap<String, AtomicReference<AbstractData>> MAP;
-	protected int map_size = 100 ;
+	protected int map_size = 1000 ;
 	
 	protected boolean needScheduleClean = false ;
 	protected long scheduleTime ;
@@ -52,14 +52,16 @@ public abstract class AbstractDataMerge {
 		return MAP.keySet();
 	}
 	
-	public boolean mergeData(String key,AbstractData data){
+	public boolean mergeData(AbstractData data){
+		if(data==null) 
+			return true ;
 		AtomicReference<AbstractData> ref;
 		while (true) {
-			ref = MAP.get(key);
+			ref = MAP.get(data.getName());
 			if (ref == null) {
 				if(MAP.size()> map_size ) return false;
 				ref = new AtomicReference<AbstractData>();
-				if(MAP.putIfAbsent(key, ref) !=null ){
+				if(MAP.putIfAbsent(data.getName(), ref) !=null ){
 					continue;
 				}				
 			}
