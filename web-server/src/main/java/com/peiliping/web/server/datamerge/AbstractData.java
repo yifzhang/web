@@ -7,10 +7,13 @@ public abstract class AbstractData {
 	protected String name ;  //保存在MAP的key
 	@Getter
 	protected long expiretime ;//到期时间点
+	@Getter
+	protected Object value ;
 	
-	public AbstractData(String name,long expiretime) {
+	public AbstractData(String name,long expiretime,Object value) {
 		this.name = name ;
 		this.expiretime = expiretime ;
+		this.value = value ;
 	}
 	
 	/**
