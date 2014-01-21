@@ -26,7 +26,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="com.alibaba.druid.filter.stat.StatFilter" level="INFO"	additivity="false">
+	<logger name="com.alibaba.druid.pool.DruidDataSourceStatLoggerImpl" level="INFO"	additivity="false">
 		<appender-ref ref="A" />
 	</logger>
 
