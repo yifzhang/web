@@ -46,9 +46,4 @@ public class DruidDataSourceManagerTool extends IDataSourceManagerTool {
 		}
 		return false;
 	}
-	
-	public static void main(String[] args) {
-		System.out.println(DruidDataSource.class.getCanonicalName());
-	}
-
 }
