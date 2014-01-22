@@ -75,7 +75,7 @@ public class TestControl {
 	@RequestMapping("/json.do")
 	@ResponseBody
 	public Map<String, Object> testvm2() {
-		return (new MapX()).add("a", "b").add("c", "d").add("e", "f").end();
+		return (new MapX()).add("a", "b").add("c", "d").add("e", "f");
 	}
 
 }

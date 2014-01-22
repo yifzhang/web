@@ -5,36 +5,45 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+public class MapX extends HashMap<String,Object>{
 
-public class MapX {
+	private static final long serialVersionUID = 1L;
 	
-	private Map<String, Object> result = new HashMap<String, Object>();
+	private volatile boolean lock = false  ;
 	
-	public MapX(){}
+	@Override
+	@Deprecated
+	public Object put(String key, Object value) {
+		if(lock)  return null ;
+		return super.put(key, value);
+	}
 	
-	public MapX(Map<String, Object> m){
-		result = (m!=null ? m : result );
+	@Override
+	@Deprecated
+	public void putAll(Map<? extends String, ? extends Object> m) {
+		if(lock) return ;
+		super.putAll(m);
 	}
 	
 	public MapX add(String l, Object r){
-		result.put(l, r);
+		if(lock)  return MapX.this ; 
+		super.put(l, r);
 		return MapX.this ;
 	}
 	
 	public MapX add(Pair<String,Object> pair){
+		if(lock) return MapX.this ;
 		if(pair!=null){
-			result.put(pair.getKey(), pair.getValue());
+			super.put(pair.getKey(), pair.getValue());
 		}
 		return MapX.this ;
 	}
 	
-	public static Map<String, Object> addAndGet(String l, Object r){
-		Map<String, Object> tmp = new HashMap<String, Object>();
-		tmp.put(l, r);
-		return tmp ;
+	public void LockModify(){
+		lock = true ;
 	}
 	
-	public Map<String, Object> end(){
-		return result ;
+	public static Map<String, Object> addAndGet(String l, Object r){
+		return (new MapX()).add(l, r);
 	}
 }
