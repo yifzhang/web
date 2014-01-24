@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,6 +38,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	
 	public static Map<String ,DynamicDataSource> reg = new HashMap<String, DynamicDataSource>();  
 	
+	@Getter
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
 	@Getter
 	@Setter
@@ -64,7 +66,10 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected boolean needRemote = false ;  //是否需要远程获取数据源
 	@Getter
 	@Setter
-	protected String dataSourceClassName = "com.alibaba.druid.pool.DruidDataSource" ;
+	protected String dataSourceClassName = DruidDataSource.class.getCanonicalName() ;
+	@Getter
+	@Setter
+	private DynamicDataSourceUpdateListener listener;
 	
 	public static final String TOKEN_GET_ALL = "getall";
 	
@@ -113,6 +118,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		for (Entry<String, Map<String,String>> e : map.entrySet()) {
 			Object o = tmp_targetDataSources.get(e.getKey());
 			tmp_targetDataSources.put(e.getKey(), IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue()));
+			if(listener!=null){
+				listener.call(e.getKey(),(DataSource)tmp_targetDataSources.get(e.getKey()),(DataSource)o);
+			}
 			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)o);
 		}
 		super.afterPropertiesSet();
@@ -183,4 +191,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		}
 		throw new IllegalArgumentException("Try my best,but failed![" + url + "]" );
 	}	
+	
+	public interface DynamicDataSourceUpdateListener{
+		void call(String k , DataSource dnew ,DataSource dold);
+	}
 }
