@@ -40,7 +40,7 @@ public class SequenceService {
 	private String sequenceClazzName = DefaultSequence.class.getCanonicalName() ;
 	@Setter
 	@Getter
-	private String sequenceDaoClazzName = DefaultSequence.class.getCanonicalName() ;
+	private String sequenceDaoClazzName = DefaultSequenceDao.class.getCanonicalName() ;
 	
 	private List<Sequence> sequenceList = new ArrayList<Sequence>() ;
 	
