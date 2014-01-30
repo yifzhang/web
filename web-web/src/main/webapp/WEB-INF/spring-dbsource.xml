@@ -36,7 +36,7 @@
         <property name="logAbandoned" value="true" />    	
 	</bean>
     
-    <bean id="vpsDynamicDataSource" class="com.peiliping.frame.DataSource.DynamicDataSource" >
+    <bean id="vpsDynamicDataSource" class="com.peiliping.frame.DataSource.DynamicDataSource" destroy-method="close" >
     	<property name="dynamicDataSourceName" value="vpsds" />
 		<property name="needRemote" value="true" />
 		<property name="needregist" value="true" />
