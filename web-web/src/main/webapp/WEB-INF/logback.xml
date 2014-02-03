@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="${log_configfile_scan}" scanPeriod="${log_configfile_scan_period} seconds" >
 	<property name="LOG_HOME" value="${logpath}" />
 
 	<appender name="main" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -26,7 +26,7 @@
 		</layout>
 	</appender>
 	
-	<logger name="com.alibaba.druid.pool.DruidDataSourceStatLoggerImpl" level="INFO"	additivity="false">
+	<logger name="com.alibaba.druid.pool.DruidDataSourceStatLoggerImpl" level="INFO" additivity="false">
 		<appender-ref ref="A" />
 	</logger>
 

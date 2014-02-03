@@ -38,8 +38,8 @@
     
     <bean id="vpsDynamicDataSource" class="com.peiliping.frame.DataSource.DynamicDataSource" destroy-method="close" >
     	<property name="dynamicDataSourceName" value="vpsds" />
-		<property name="needRemote" value="true" />
-		<property name="needregist" value="true" />
+		<property name="needRemote" value="false" />
+		<property name="needregist" value="false" />
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 	</bean>
 
