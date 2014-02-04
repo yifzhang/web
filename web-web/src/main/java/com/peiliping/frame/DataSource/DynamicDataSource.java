@@ -104,7 +104,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected Map<String,Map<String,String>> getProperties(String token){
 		Map<String,Map<String,String>> mp = new HashMap<String,Map<String,String>>();
 		if(!needRemote){ return mp;	}
-		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token );
+		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token + "&ip=" + getLocalIP() );
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map<String,String>>>(){}.getType() );
 		log.warn("Dynamic Data Source Property : " + result );
 		return mp ;

@@ -50,8 +50,8 @@ public class SequenceService {
 	
 	public void init() throws InstantiationException, IllegalAccessException{
 		Validate.isTrue(sequenceNum>=1);
-		Validate.isTrue(dataSource==null);
-		Validate.isTrue(sequenceClazzName==null);
+		Validate.isTrue(dataSource!=null);
+		Validate.isTrue(sequenceClazzName!=null);
 		dataSource.setListener(new DynamicDataSourceUpdateListener() {
 			@Override
 			public void call(String k, DataSource dnew, DataSource dold) {
@@ -61,7 +61,7 @@ public class SequenceService {
 		for(int i=0 ; i<sequenceNum ;i++){
 			Sequence t1 = SequenceClassMap.get(sequenceClazzName).newInstance();
 			t1.setName(sequenceName);
-			SequenceDao t2 = SequenceDaoClassMap.get(SequenceDaoClassMap).newInstance();
+			SequenceDao t2 = SequenceDaoClassMap.get(sequenceDaoClazzName).newInstance();
 			t2.setDataSource((DataSource)dataSource.getTmp_targetDataSources().get("" + i));
 			t1.setSequenceDao(t2);
 			sequenceList.add(t1);

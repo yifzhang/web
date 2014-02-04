@@ -21,12 +21,9 @@ public abstract class IDataSourceManagerTool {
 		HandlerMap.put(DruidDataSource.class.getCanonicalName(), new DruidDataSourceManagerTool());
 	}
 	
-	protected static Logger log = LoggerFactory
-			.getLogger(DynamicDataSource.class);
+	protected static Logger log = LoggerFactory.getLogger(DynamicDataSource.class);
 
-	protected static Gson GSON = new GsonBuilder()
-			.setLongSerializationPolicy(LongSerializationPolicy.STRING)
-			.disableHtmlEscaping().create();
+	protected static Gson GSON = new GsonBuilder().setLongSerializationPolicy(LongSerializationPolicy.STRING).disableHtmlEscaping().create();
 
 	public abstract DataSource createAinitDataSource(Map<String,String> properties);
 	
