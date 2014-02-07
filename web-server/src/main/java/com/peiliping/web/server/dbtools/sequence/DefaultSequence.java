@@ -1,4 +1,4 @@
-package com.peiliping.frame.sequence;
+package com.peiliping.web.server.dbtools.sequence;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

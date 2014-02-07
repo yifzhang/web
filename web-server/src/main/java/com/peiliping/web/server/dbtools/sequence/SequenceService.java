@@ -1,4 +1,4 @@
-package com.peiliping.frame.sequence;
+package com.peiliping.web.server.dbtools.sequence;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,8 +12,8 @@ import lombok.Setter;
 
 import org.apache.commons.lang3.Validate;
 
-import com.peiliping.frame.DataSource.DynamicDataSource;
-import com.peiliping.frame.DataSource.DynamicDataSource.DynamicDataSourceUpdateListener;
+import com.peiliping.web.server.dbtools.datasource.DynamicDataSource;
+import com.peiliping.web.server.dbtools.datasource.DynamicDataSource.DynamicDataSourceUpdateListener;
 
 public class SequenceService {
 	

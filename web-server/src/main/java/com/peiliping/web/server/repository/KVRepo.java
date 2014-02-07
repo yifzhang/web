@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.peiliping.web.server.dao.KVDAO;
 import com.peiliping.web.server.dataobject.KV;
+import com.peiliping.web.server.dbtools.datasource.DataSourceContextHolder;
 
 @Repository
 public class KVRepo {

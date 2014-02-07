@@ -1,4 +1,4 @@
-package com.peiliping.frame.sequence;
+package com.peiliping.web.server.dbtools.sequence;
 
 public interface Sequence {
 	
