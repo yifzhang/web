@@ -30,25 +30,25 @@ public class SequenceService {
 	
 	@Setter
 	@Getter
-	private int sequenceNum = 1 ;
-	
+	private int step = 1000;
 	@Setter
 	@Getter
-	private DynamicDataSource dataSource;
-	
+	private int sequenceNum = 1 ;	
+	@Setter
+	@Getter
+	private DynamicDataSource dataSource;	
 	@Setter
 	@Getter
 	private String sequenceClazzName = DefaultSequence.class.getCanonicalName() ;
 	@Setter
 	@Getter
-	private String sequenceDaoClazzName =GroupSequenceDao.class.getCanonicalName() ;
-	
-	private List<Sequence> sequenceList = new ArrayList<Sequence>() ;
-	
+	private String sequenceDaoClazzName =DefaultSequenceDao.class.getCanonicalName() ;
 	@Setter
 	@Getter
 	private String sequenceName;
 	
+	private List<Sequence> sequenceList = new ArrayList<Sequence>() ;
+		
 	public void init() throws InstantiationException, IllegalAccessException{
 		Validate.isTrue(sequenceNum>=1);
 		Validate.isTrue(dataSource!=null);
@@ -60,19 +60,23 @@ public class SequenceService {
 			}
 		});
 		for(int i=0 ; i<sequenceNum ;i++){
-			Sequence t1 = SequenceClassMap.get(sequenceClazzName).newInstance();
-			t1.setName(sequenceName);
-			SequenceDao t2 = SequenceDaoClassMap.get(sequenceDaoClazzName).newInstance();
-			t2.setDataSource((DataSource)dataSource.getTmp_targetDataSources().get("" + i));
-			t1.setSequenceDao(t2);
-			sequenceList.add(t1);
+			SequenceDao sd = SequenceDaoClassMap.get(sequenceDaoClazzName).newInstance();
+			sd.setDataSource((DataSource)dataSource.getTmp_targetDataSources().get("" + i));
+			sd.setStep(step);
+			
+			Sequence s = SequenceClassMap.get(sequenceClazzName).newInstance();
+			s.setName(sequenceName);
+			s.setSequenceDao(sd);
+			sequenceList.add(s);
 		}
 	}
 	
 	public long nextValue() throws SequenceException{
-		Random random=new Random();
-		int i = random.nextInt(sequenceNum);
+		int i = 0 ;
+		if(sequenceNum > 1){
+			Random random=new Random();
+			i = random.nextInt(sequenceNum);
+		}
 		return sequenceList.get(i).nextValue(i,sequenceNum);
 	}
-	
 }

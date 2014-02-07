@@ -3,15 +3,21 @@ package com.peiliping.web.server.dbtools.sequence;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class DefaultSequence implements Sequence{
 	
 	protected final Lock lock = new ReentrantLock();
 
+	@Setter
+	@Getter
 	private SequenceDao sequenceDao;
-
+	@Setter
+	@Getter
 	private String name;
 
-	private volatile SequenceRange currentRange;
+	protected volatile SequenceRange currentRange;
 
 	public long nextValue(int index,int total) throws SequenceException {
 		if (currentRange == null) {
@@ -24,7 +30,6 @@ public class DefaultSequence implements Sequence{
 				lock.unlock();
 			}
 		}
-
 		long value = currentRange.getAndIncrement();
 		if (value == -1) {
 			lock.lock();
@@ -45,29 +50,9 @@ public class DefaultSequence implements Sequence{
 				lock.unlock();
 			}
 		}
-
 		if (value < 0) {
 			throw new SequenceException("Sequence value overflow, value = " + value);
 		}
-
 		return value;
-	}
-
-	public SequenceDao getSequenceDao() {
-		return sequenceDao;
-	}
-	
-	@Override
-	public void setSequenceDao(SequenceDao sequenceDao) {
-		this.sequenceDao = sequenceDao;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
 	}
 }

@@ -2,14 +2,18 @@ package com.peiliping.web.server.dbtools.sequence;
 
 import java.util.concurrent.atomic.AtomicLong;
 
+import lombok.Getter;
+
 public class SequenceRange {
 
+	@Getter
 	private final long min;
+	@Getter
 	private final long max;
+	@Getter
+	private volatile boolean over = false;
 
 	private final AtomicLong value;
-
-	private volatile boolean over = false;
 
 	public SequenceRange(long min, long max) {
 		this.min = min;
@@ -23,19 +27,6 @@ public class SequenceRange {
 			over = true;
 			return -1;
 		}
-
 		return currentValue;
-	}
-
-	public long getMin() {
-		return min;
-	}
-
-	public long getMax() {
-		return max;
-	}
-
-	public boolean isOver() {
-		return over;
 	}
 }

@@ -120,6 +120,8 @@
 	<bean id="seqservice" class="com.peiliping.web.server.dbtools.sequence.SequenceService" init-method="init">
 		<property name="sequenceName" value="seqtest" />
 		<property name="sequenceNum" value="2" />
+		<property name="step" value="100" />
+		<property name="sequenceDaoClazzName" value="com.peiliping.web.server.dbtools.sequence.GroupSequenceDao" />
 		<property name="dataSource" ref="sequenceDynamicDataSource" />
 	</bean>
 </beans>
