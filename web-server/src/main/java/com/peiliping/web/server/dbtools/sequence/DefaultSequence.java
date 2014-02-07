@@ -5,7 +5,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class DefaultSequence implements Sequence{
 	
-	private final Lock lock = new ReentrantLock();
+	protected final Lock lock = new ReentrantLock();
 
 	private SequenceDao sequenceDao;
 
@@ -13,12 +13,12 @@ public class DefaultSequence implements Sequence{
 
 	private volatile SequenceRange currentRange;
 
-	public long nextValue() throws SequenceException {
+	public long nextValue(int index,int total) throws SequenceException {
 		if (currentRange == null) {
 			lock.lock();
 			try {
 				if (currentRange == null) {
-					currentRange = sequenceDao.nextRange(name);
+					currentRange = sequenceDao.nextRange(name,index,total);
 				}
 			} finally {
 				lock.unlock();
@@ -31,7 +31,7 @@ public class DefaultSequence implements Sequence{
 			try {
 				for (;;) {
 					if (currentRange.isOver()) {
-						currentRange = sequenceDao.nextRange(name);
+						currentRange = sequenceDao.nextRange(name,index,total);
 					}
 
 					value = currentRange.getAndIncrement();

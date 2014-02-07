@@ -52,5 +52,74 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="basePackage" value="com.peiliping.web.server.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-	</bean>	
+	</bean>		
+	
+	<!-- Sequence Test -->
+	<bean id="seq1ds" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+    	<property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+		<property name="url"><value>jdbc:mysql://${mysqlip}:${mysqlport}/testseq1</value></property>
+		<property name="username"><value>${mysqlusername}</value></property>
+		<property name="password"><value>${mysqlpassword}</value></property>
+    	<property name="initialSize" value="5"/>
+        <property name="minIdle" value="5"/>
+        <property name="maxActive" value="50"/>
+    	<property name="maxWait" value="5000" />    	
+    	<property name="filters" value="stat,slf4j" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="timeBetweenLogStatsMillis" value="120000" />    	
+    	<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />		
+		<property name="validationQuery" value="SELECT 'x' FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />		
+		<property name="poolPreparedStatements" value="false" /> <!-- oracle true mysql false -->
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />		
+        <property name="removeAbandoned" value="true" /> 
+        <property name="removeAbandonedTimeout" value="1200" /> 
+        <property name="logAbandoned" value="true" />    	
+	</bean>
+	<bean id="seq2ds" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+    	<property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+		<property name="url"><value>jdbc:mysql://${mysqlip}:${mysqlport}/testseq2</value></property>
+		<property name="username"><value>${mysqlusername}</value></property>
+		<property name="password"><value>${mysqlpassword}</value></property>
+    	<property name="initialSize" value="5"/>
+        <property name="minIdle" value="5"/>
+        <property name="maxActive" value="50"/>
+    	<property name="maxWait" value="5000" />    	
+    	<property name="filters" value="stat,slf4j" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="timeBetweenLogStatsMillis" value="120000" />    	
+    	<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />		
+		<property name="validationQuery" value="SELECT 'x' FROM DUAL" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />		
+		<property name="poolPreparedStatements" value="false" /> <!-- oracle true mysql false -->
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />		
+        <property name="removeAbandoned" value="true" /> 
+        <property name="removeAbandonedTimeout" value="1200" /> 
+        <property name="logAbandoned" value="true" />    	
+	</bean>
+	
+	<bean id="sequenceDynamicDataSource" class="com.peiliping.web.server.dbtools.datasource.DynamicDataSource" destroy-method="close" >
+    	<property name="dynamicDataSourceName" value="seqds" />
+    	<property name="targetDataSources">     
+      		<map key-type="java.lang.String">     
+         		<entry key="0" value-ref="seq1ds"/>     
+         		<entry key="1" value-ref="seq2ds"/>     
+      		</map>     
+   		</property>
+		<property name="needRemote" value="false" />
+		<property name="needregist" value="false" />
+		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
+	</bean>
+	
+	<bean id="seqservice" class="com.peiliping.web.server.dbtools.sequence.SequenceService" init-method="init">
+		<property name="sequenceName" value="seqtest" />
+		<property name="sequenceNum" value="2" />
+		<property name="dataSource" ref="sequenceDynamicDataSource" />
+	</bean>
 </beans>

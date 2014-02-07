@@ -25,6 +25,7 @@ public class SequenceService {
 	public static HashMap<String,Class<? extends SequenceDao>> SequenceDaoClassMap = new HashMap<String,Class<? extends SequenceDao>>();
 	static {
 		SequenceDaoClassMap.put(DefaultSequenceDao.class.getCanonicalName(), DefaultSequenceDao.class);
+		SequenceDaoClassMap.put(GroupSequenceDao.class.getCanonicalName(), GroupSequenceDao.class);
 	}
 	
 	@Setter
@@ -40,7 +41,7 @@ public class SequenceService {
 	private String sequenceClazzName = DefaultSequence.class.getCanonicalName() ;
 	@Setter
 	@Getter
-	private String sequenceDaoClazzName = DefaultSequenceDao.class.getCanonicalName() ;
+	private String sequenceDaoClazzName =GroupSequenceDao.class.getCanonicalName() ;
 	
 	private List<Sequence> sequenceList = new ArrayList<Sequence>() ;
 	
@@ -70,7 +71,8 @@ public class SequenceService {
 	
 	public long nextValue() throws SequenceException{
 		Random random=new Random();
-		return sequenceList.get(random.nextInt(sequenceNum)).nextValue();
+		int i = random.nextInt(sequenceNum);
+		return sequenceList.get(i).nextValue(i,sequenceNum);
 	}
 	
 }

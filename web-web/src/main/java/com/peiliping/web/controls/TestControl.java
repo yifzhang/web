@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.peiliping.web.server.dataobject.KV;
+import com.peiliping.web.server.dbtools.sequence.SequenceException;
+import com.peiliping.web.server.dbtools.sequence.SequenceService;
 import com.peiliping.web.server.repository.KVRepo;
 import com.peiliping.web.server.tools.MapX;
 import com.peiliping.web.server.tools.SpringContextHolder;
@@ -20,7 +22,9 @@ public class TestControl {
 
 	@Autowired
 	private KVRepo kvDAO;
-
+	@Autowired
+	private SequenceService seqservice;
+	
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 
 	@RequestMapping("/test.htm")
@@ -76,6 +80,13 @@ public class TestControl {
 	@ResponseBody
 	public Map<String, Object> testvm2() {
 		return (new MapX()).add("a", "b").add("c", "d").add("e", "f");
+	}
+	
+	@RequestMapping("/seq.do")
+	@ResponseBody
+	public Map<String, Object> seqvm2() throws SequenceException {
+		long t = seqservice.nextValue();
+		return MapX.addAndGet("seq", t);
 	}
 
 }

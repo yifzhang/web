@@ -12,9 +12,9 @@ import javax.sql.DataSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class DefaultSequenceDao implements SequenceDao {
+public class GroupSequenceDao implements SequenceDao {
 
-	private static final Log log = LogFactory.getLog(DefaultSequenceDao.class);
+	private static final Log log = LogFactory.getLog(GroupSequenceDao.class);
 
 	private static final int MIN_STEP = 1;
 	private static final int MAX_STEP = 100000;
@@ -45,7 +45,7 @@ public class DefaultSequenceDao implements SequenceDao {
 	private volatile String selectSql;
 	private volatile String updateSql;
 
-	public SequenceRange nextRange(String name,int index,int total) throws SequenceException {
+	public SequenceRange nextRange(String name,int index ,int total) throws SequenceException {
 		if (name == null) {
 			throw new IllegalArgumentException("Name is Null");
 		}
@@ -77,7 +77,7 @@ public class DefaultSequenceDao implements SequenceDao {
 					message.append(", please check table ").append(getTableName());
 					throw new SequenceException(message.toString());
 				}
-				newValue = oldValue + getStep();
+				newValue = oldValue + getStep()*total;
 			} catch (SQLException e) {
 				throw new SequenceException(e);
 			} finally {
@@ -100,7 +100,7 @@ public class DefaultSequenceDao implements SequenceDao {
 				if (affectedRows == 0) {
 					continue;
 				}
-				return new SequenceRange(oldValue + 1, newValue);
+				return new SequenceRange(newValue + 1, newValue + getStep());
 			} catch (SQLException e) {
 				throw new SequenceException(e);
 			} finally {
@@ -246,4 +246,5 @@ public class DefaultSequenceDao implements SequenceDao {
 	public void setGmtModifiedColumnName(String gmtModifiedColumnName) {
 		this.gmtModifiedColumnName = gmtModifiedColumnName;
 	}
+
 }

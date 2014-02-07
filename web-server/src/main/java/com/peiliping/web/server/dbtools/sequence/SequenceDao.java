@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 public interface SequenceDao {
 	
-	SequenceRange nextRange(String name) throws SequenceException;
+	SequenceRange nextRange(String name,int index,int total) throws SequenceException;
 
-	public void setDataSource(DataSource dataSource);
+	void setDataSource(DataSource dataSource);
 }
