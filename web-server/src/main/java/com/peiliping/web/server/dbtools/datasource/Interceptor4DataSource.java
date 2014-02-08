@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 	@Signature(type = Executor.class, method ="query", args = {MappedStatement.class, Object.class ,RowBounds.class, ResultHandler.class,CacheKey.class, BoundSql.class})
 }) 
 public class Interceptor4DataSource implements Interceptor{
+	
+	public volatile boolean flag = true ;
 
 	private Map<String,Object> cache = new HashMap<String, Object>();
 	
@@ -36,6 +38,8 @@ public class Interceptor4DataSource implements Interceptor{
 	
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
+		if(!flag){ return invocation.proceed();	}
+		
 		MappedStatement ms = (MappedStatement)invocation.getArgs()[0];
 		if(cache.get(ms.getId()) == null){
 			BoundSql b = ms.getBoundSql(invocation.getArgs()[1]);
