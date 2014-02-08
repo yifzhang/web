@@ -41,6 +41,12 @@
 		<property name="needRemote" value="false" />
 		<property name="needregist" value="false" />
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
+		<property name="targetDataSources">     
+      		<map key-type="java.lang.String">     
+         		<entry key="0" value-ref="seq1ds"/>     
+         		<entry key="1" value-ref="seq2ds"/>     
+      		</map>     
+   		</property>
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

@@ -5,5 +5,7 @@ import com.peiliping.web.server.dataobject.KV;
 public interface KVDAO {
 	
 	KV getKV(String key);
+	
+	int insertKV(KV kv);
 
 }

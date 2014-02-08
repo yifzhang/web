@@ -4,4 +4,11 @@
     <select id="getKV" parameterType="String" resultType="com.peiliping.web.server.dataobject.KV" >
     	select	k,v from kv where k = #{key}#
     </select>
+    <insert id="insertKV" >   		
+        INSERT INTO kv (k,v)
+        VALUES(        	
+            #{k},
+            #{v}            
+        )
+    </insert>
 </mapper>

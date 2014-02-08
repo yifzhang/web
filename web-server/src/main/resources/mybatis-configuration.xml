@@ -3,7 +3,9 @@
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
 	<plugins>  
-       <plugin interceptor="com.peiliping.web.server.dbtools.datasource.Interceptor4DataSource" />   
+       <plugin interceptor="com.peiliping.web.server.dbtools.datasource.Interceptor4DataSource" >
+        	<property name="kv" value="1" />  
+       </plugin>
     </plugins> 
     <mappers>
         <mapper resource="kv.xml"/>

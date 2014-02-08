@@ -20,5 +20,12 @@ public class KVRepo {
 		}else 
 			return null;
 	}
+	
+	public int insert(String k,String v){
+		KV kv = new KV();
+		kv.setK(k);
+		kv.setV(v);
+		return kvDao.insertKV(kv);
+	}
 
 }

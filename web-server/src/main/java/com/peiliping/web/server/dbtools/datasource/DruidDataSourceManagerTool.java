@@ -33,10 +33,10 @@ public class DruidDataSourceManagerTool extends IDataSourceManagerTool {
 			log.error("init druid datasource errror" + GSON.toJson(properties, new TypeToken<Map<String,String>>() {}.getType()) ,e);
 			throw new IllegalArgumentException("Init Datasource Failure"+ GSON.toJson(properties, new TypeToken<Map<String,String>>() {}.getType()), e);
 		}		
-		LazyConnectionDataSourceProxy lcdp = new LazyConnectionDataSourceProxy();
-		lcdp.setTargetDataSource(ds);
-		lcdp.setDefaultAutoCommit(true);
-		return lcdp;
+//		LazyConnectionDataSourceProxy lcdp = new LazyConnectionDataSourceProxy();
+//		lcdp.setTargetDataSource(ds);
+//		lcdp.setDefaultAutoCommit(true);
+		return ds;
 	}
 
 	@Override

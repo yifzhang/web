@@ -63,6 +63,19 @@ public class TestControl {
 		return mv;
 	}
 
+	@RequestMapping("/testinsert.htm")
+	public ModelAndView testinsert() {
+		ModelAndView mv = new ModelAndView("testvm");
+		try {
+			logger.error("testvm");
+			int i = kvDAO.insert("wer", "vdc");
+			mv.addObject("name", i);
+		} catch (Throwable e) {
+			logger.error("sql", e);
+		}
+		return mv;
+	}
+	
 	@RequestMapping("/testlayout.htm")
 	public ModelAndView testlayoutvm() {
 		ModelAndView mv = new ModelAndView("testlayout");
