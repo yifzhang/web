@@ -2,6 +2,9 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+	<plugins>  
+       <plugin interceptor="com.peiliping.web.server.dbtools.datasource.Interceptor4DataSource" />   
+    </plugins> 
     <mappers>
         <mapper resource="kv.xml"/>
     </mappers>

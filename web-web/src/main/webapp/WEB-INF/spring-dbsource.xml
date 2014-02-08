@@ -47,6 +47,7 @@
 		<property name="dataSource" ref="vpsDynamicDataSource" />
 		<property name="configLocation" value="classpath:mybatis-configuration.xml" />
 		<property name="typeAliasesPackage" value="com.peiliping.web.server.dataobject" />
+		
 	</bean>
 
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy;
+
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.pool.DruidDataSourceFactory;
 import com.google.gson.reflect.TypeToken;
@@ -30,8 +32,11 @@ public class DruidDataSourceManagerTool extends IDataSourceManagerTool {
 		} catch (SQLException e) {
 			log.error("init druid datasource errror" + GSON.toJson(properties, new TypeToken<Map<String,String>>() {}.getType()) ,e);
 			throw new IllegalArgumentException("Init Datasource Failure"+ GSON.toJson(properties, new TypeToken<Map<String,String>>() {}.getType()), e);
-		}
-		return ds;
+		}		
+		LazyConnectionDataSourceProxy lcdp = new LazyConnectionDataSourceProxy();
+		lcdp.setTargetDataSource(ds);
+		lcdp.setDefaultAutoCommit(true);
+		return lcdp;
 	}
 
 	@Override
@@ -43,6 +48,8 @@ public class DruidDataSourceManagerTool extends IDataSourceManagerTool {
 			} catch (Throwable ex) {
 				log.error("close datasource error : " ,  ex);
 			}
+		}else if(datasource != null && datasource instanceof LazyConnectionDataSourceProxy){
+			return destroyDataSource(((LazyConnectionDataSourceProxy)datasource ).getTargetDataSource());
 		}
 		return false;
 	}

@@ -69,6 +69,9 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	@Getter
 	@Setter
 	private DynamicDataSourceUpdateListener listener;
+
+	private DataSource tmp_defaultTargetDataSource ;	
+	private static final String DEFAULT_KEY = "DEFAULT";
 	
 	public static final String TOKEN_GET_ALL = "getall";
 	
@@ -81,7 +84,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		if (map.size() > 0) {
 			for (Entry<String, Map<String,String>> e : map.entrySet()) {
 				DataSource ds =  IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue());
-				tmp_targetDataSources.put(e.getKey(), ds);
+				if(DEFAULT_KEY.equals(e.getKey())){
+					setDefaultTargetDataSource(ds);
+				}else{
+					tmp_targetDataSources.put(e.getKey(), ds);
+				}
 			}
 		}
 		super.setTargetDataSources(tmp_targetDataSources);
@@ -115,10 +122,14 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			return false;
 		}
 		for (Entry<String, Map<String,String>> e : map.entrySet()) {
-			Object o = tmp_targetDataSources.get(e.getKey());
-			tmp_targetDataSources.put(e.getKey(), IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue()));
+			Object o = DEFAULT_KEY.equals(e.getKey())?tmp_defaultTargetDataSource :tmp_targetDataSources.get(e.getKey());
+			if(DEFAULT_KEY.equals(e.getKey())){
+				setDefaultTargetDataSource(IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue()));
+			}else{
+				tmp_targetDataSources.put(e.getKey(), IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue()));
+			}
 			if(listener!=null){
-				listener.call(e.getKey(),(DataSource)tmp_targetDataSources.get(e.getKey()),(DataSource)o);
+				listener.call(e.getKey(), DEFAULT_KEY.equals(e.getKey()) ? tmp_defaultTargetDataSource : (DataSource)tmp_targetDataSources.get(e.getKey()),(DataSource)o);
 			}
 			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)o);
 		}
@@ -130,6 +141,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		for(Entry<Object,Object> e :  tmp_targetDataSources.entrySet()){
 			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)e.getValue());
 		}
+		IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource(tmp_defaultTargetDataSource);
 	}	
 
 	public void setNeedregist(boolean needregist) {
@@ -137,6 +149,12 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		if(needregist)
 			httpconnnect(configserver_host + configserver_reg + 
 				DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + getLocalIP());
+	}
+	
+	@Override
+	public void setDefaultTargetDataSource(Object defaultTargetDataSource) {
+		tmp_defaultTargetDataSource = (DataSource)defaultTargetDataSource;
+		super.setDefaultTargetDataSource(defaultTargetDataSource);
 	}
 	
 	public static String getLocalIP(){
