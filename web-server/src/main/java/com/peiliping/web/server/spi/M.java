@@ -9,7 +9,8 @@ public class M {
 	public static void m (){	
         for (Make make : serviceLoader){
             make.make();
-        }		
+        }
+        serviceLoader.reload();
 	}
 	
 }
