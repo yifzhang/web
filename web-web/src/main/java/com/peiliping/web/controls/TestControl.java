@@ -14,6 +14,7 @@ import com.peiliping.web.server.dataobject.KV;
 import com.peiliping.web.server.dbtools.sequence.SequenceException;
 import com.peiliping.web.server.dbtools.sequence.SequenceService;
 import com.peiliping.web.server.repository.KVRepo;
+import com.peiliping.web.server.spi.M;
 import com.peiliping.web.server.tools.MapX;
 import com.peiliping.web.server.tools.SpringContextHolder;
 
@@ -35,6 +36,7 @@ public class TestControl {
 			e.printStackTrace();
 		}
 		logger.error("testjsp");
+		M.m();
 		return "test";
 	}
 
