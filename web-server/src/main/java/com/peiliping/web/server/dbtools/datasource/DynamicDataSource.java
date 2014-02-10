@@ -1,13 +1,5 @@
 package com.peiliping.web.server.dbtools.datasource;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,6 +20,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
+import com.peiliping.web.server.tools.Utils;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
@@ -110,7 +103,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected Map<String,Map<String,String>> getProperties(String token){
 		Map<String,Map<String,String>> mp = new HashMap<String,Map<String,String>>();
 		if(!needRemote){ return mp;	}
-		String result = httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token + "&ip=" + getLocalIP() );
+		String result = Utils.httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token + "&ip=" + Utils.getLocalIP() );
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map<String,String>>>(){}.getType() );
 		log.warn("Dynamic Data Source Property : " + result );
 		return mp ;
@@ -147,8 +140,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	public void setNeedregist(boolean needregist) {
 		this.needregist = needregist;
 		if(needregist)
-			httpconnnect(configserver_host + configserver_reg + 
-				DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + getLocalIP());
+			Utils.httpconnnect(configserver_host + configserver_reg + 
+				DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + Utils.getLocalIP());
 	}
 	
 	@Override
@@ -156,58 +149,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		tmp_defaultTargetDataSource = (DataSource)defaultTargetDataSource;
 		super.setDefaultTargetDataSource(defaultTargetDataSource);
 	}
-	
-	public static String getLocalIP(){
-		String localIP = null;
-		String netIP = null;
-		Enumeration<NetworkInterface> nInterfaces = null;
-		try {
-			nInterfaces = NetworkInterface.getNetworkInterfaces();
-		} catch (SocketException e) {		}
-		boolean finded = false;
-		while(nInterfaces.hasMoreElements() && !finded){
-			Enumeration<InetAddress> inetAddress = nInterfaces.nextElement().getInetAddresses();
-			while(inetAddress.hasMoreElements()){
-				InetAddress address = inetAddress.nextElement();
-				if(!address.isSiteLocalAddress() && !address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1){
-					netIP = address.getHostAddress();
-					finded = true;
-					break;
-				}else if(address.isSiteLocalAddress() && !address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1){
-					localIP = address.getHostAddress();
-				}
-			}
-		}
-		return (netIP != null && !"".equals(netIP)) ? netIP : localIP ; 
-	}
-	
-	public static String httpconnnect(String url) {
-		int trytimes = 3;
-		while (trytimes > 0) {
-			HttpURLConnection connection = null;
-			try {
-				URL u = new URL(url);
-				connection = (HttpURLConnection) u.openConnection();
-				connection.setRequestMethod("GET");
-				connection.connect();
-				BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-				StringBuffer sb = new StringBuffer();
-				String content = "";
-				while ((content = br.readLine()) != null) {
-					sb.append(content + "\n");
-				}
-				return sb.toString();
-			} catch (Exception e) {
-				trytimes--;
-				log.error("httpconnect error : " + url, e);
-			} finally {
-				if (connection != null) {
-					connection.disconnect();
-				}
-			}
-		}
-		throw new IllegalArgumentException("Try my best,but failed![" + url + "]" );
-	}	
 	
 	public interface DynamicDataSourceUpdateListener{
 		void call(String k , DataSource dnew ,DataSource dold);
