@@ -35,11 +35,14 @@
         <property name="removeAbandonedTimeout" value="1200" /> 
         <property name="logAbandoned" value="true" />    	
 	</bean>
+	
+	<bean id="subscriber_vpsds" class="com.peiliping.web.server.subscriber.Subscriber" >
+		
+	</bean>
     
     <bean id="vpsDynamicDataSource" class="com.peiliping.web.server.dbtools.datasource.DynamicDataSource" destroy-method="close" >
     	<property name="dynamicDataSourceName" value="vpsds" />
-		<property name="needRemote" value="false" />
-		<property name="needregist" value="false" />
+		<property name="needRemote" value="true" />
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 		<property name="targetDataSources">     
       		<map key-type="java.lang.String">     
@@ -47,6 +50,7 @@
          		<entry key="1" value-ref="seq2ds"/>     
       		</map>     
    		</property>
+   		<property name="subscriber" ref="subscriber_vpsds" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
@@ -120,7 +124,6 @@
       		</map>     
    		</property>
 		<property name="needRemote" value="false" />
-		<property name="needregist" value="false" />
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 	</bean>
 	
