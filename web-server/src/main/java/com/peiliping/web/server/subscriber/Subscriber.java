@@ -16,7 +16,6 @@ import com.peiliping.web.server.subscriber.constants.MessageAction;
 import com.peiliping.web.server.subscriber.entity.Topic;
 import com.peiliping.web.server.tools.HttpUtil;
 import com.peiliping.web.server.tools.HttpUtil.HttpResult;
-import com.peiliping.web.server.tools.Utils;
 
 public class Subscriber implements InitializingBean{
 	
@@ -26,7 +25,7 @@ public class Subscriber implements InitializingBean{
 		return REG.get(topicId);
 	}
 	
-	private String localIp = Utils.getLocalIP();
+	private String localIp = HttpUtil.getLocalIP();
 	@Setter
 	@Getter
 	private String serverHost = "127.0.0.1";	

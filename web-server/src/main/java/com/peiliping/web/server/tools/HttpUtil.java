@@ -7,7 +7,11 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
+import java.util.Enumeration;
 
 public class HttpUtil {
 
@@ -73,5 +77,29 @@ public class HttpUtil {
             this.content = content;
         }
     }
+    
+	public static String getLocalIP(){
+		String localIP = null;
+		String netIP = null;
+		Enumeration<NetworkInterface> nInterfaces = null;
+		try {
+			nInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {		}
+		boolean finded = false;
+		while(nInterfaces.hasMoreElements() && !finded){
+			Enumeration<InetAddress> inetAddress = nInterfaces.nextElement().getInetAddresses();
+			while(inetAddress.hasMoreElements()){
+				InetAddress address = inetAddress.nextElement();
+				if(!address.isSiteLocalAddress() && !address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1){
+					netIP = address.getHostAddress();
+					finded = true;
+					break;
+				}else if(address.isSiteLocalAddress() && !address.isLoopbackAddress() && address.getHostAddress().indexOf(":") == -1){
+					localIP = address.getHostAddress();
+				}
+			}
+		}
+		return (netIP != null && !"".equals(netIP)) ? netIP : localIP ; 
+	}
     
 }
