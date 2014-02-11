@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.peiliping.web.server.subscriber.constants.MessageAction;
+
 public class SubscriberFilter implements Filter {
 
 	protected static Logger log = LoggerFactory.getLogger(SubscriberFilter.class);
@@ -30,7 +32,7 @@ public class SubscriberFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		String id = req.getParameter(PARAM_ID);
 		Subscriber s = Subscriber.getSubscriber(id);
-		buildResponse(response, s==null ? "ERROR" : (s.getDataAndNotify(req.getParameter(PARAM_ACTION))? "OK" : "ERROR"));
+		buildResponse(response, s==null ? "ERROR" : (s.getDataAndNotify(MessageAction.getMessageAction(Integer.valueOf(req.getParameter(PARAM_ACTION))))? "OK" : "ERROR"));
 	}
 	
 	public static void buildResponse(ServletResponse response,String result) throws IOException{

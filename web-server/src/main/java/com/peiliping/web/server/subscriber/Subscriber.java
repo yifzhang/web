@@ -21,7 +21,10 @@ import com.peiliping.web.server.tools.Utils;
 public class Subscriber implements InitializingBean{
 	
 	private final static Map<String,Subscriber> REG = new HashMap<String, Subscriber>();
-	public static Subscriber getSubscriber(String topicId){ return REG.get(topicId);}
+	
+	public static Subscriber getSubscriber(String topicId){
+		return REG.get(topicId);
+	}
 	
 	private String localIp = Utils.getLocalIP();
 	@Setter
@@ -32,12 +35,12 @@ public class Subscriber implements InitializingBean{
 	private String topicId = "test";
 	@Setter
 	@Getter
-	private boolean needRegist = false ;
+	private boolean needRegist = true ;
 	@Getter
 	private Topic topic ;
 	
 	private String buildRegistUrl(){
-		return "http://" + serverHost + "/regiest?ip=" + localIp + "&topicId=" + topicId; 
+		return "http://" + serverHost + "/subscribe?ip=" + localIp + "&topicId=" + topicId; 
 	}
 	
 	private String buildGetDataUrl(String action){
@@ -57,14 +60,16 @@ public class Subscriber implements InitializingBean{
 			topic = new Topic();
 			topic.setId(topicId);
 		}
-		Validate.isTrue(getDataAndNotify(MessageAction.Message_Action_Init.getContent()),topicId + " Subscriber Init Failed");
+		Validate.isTrue(getDataAndNotify(MessageAction.Message_Action_Init),topicId + " Subscriber Init Failed");
 		REG.put(topicId, this);
 	}
 	
-	public boolean getDataAndNotify(String action){
+	public synchronized boolean getDataAndNotify(MessageAction ma){
+		String action = ma.getContent();
 		HttpResult hr = HttpUtil.httpGet(buildGetDataUrl(action));
 		Validate.isTrue(hr.success,hr.content);
-		topic.addMessage(hr.content);
+		boolean r = topic.addMessage(hr.content);
+		if(!r) return true ;
 		for(SubscriberListener li : listeners){
 			if(MessageAction.Message_Action_Init.getContent().equals(action)){
 				li.init(topic);

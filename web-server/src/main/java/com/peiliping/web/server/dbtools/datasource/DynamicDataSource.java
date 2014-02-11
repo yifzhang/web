@@ -20,7 +20,10 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
-import com.peiliping.web.server.tools.Utils;
+import com.peiliping.web.server.subscriber.Subscriber;
+import com.peiliping.web.server.subscriber.SubscriberListener;
+import com.peiliping.web.server.subscriber.constants.MessageAction;
+import com.peiliping.web.server.subscriber.entity.Topic;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
@@ -29,27 +32,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	private static Gson GSON = new GsonBuilder().setLongSerializationPolicy(LongSerializationPolicy.STRING).disableHtmlEscaping().create();
 	
 	public static Map<String ,DynamicDataSource> reg = new HashMap<String, DynamicDataSource>();  
-	
+	@Getter
+	@Setter
+	protected Subscriber subscriber;
 	@Getter
 	protected Map<Object, Object> tmp_targetDataSources = new HashMap<Object, Object>();
-	@Getter
-	@Setter
-	protected String configserver_host = "http://127.0.0.1"; 
-	@Getter
-	@Setter
-	protected String configserver_reg = "/regist?";     // 
-	@Getter
-	@Setter
-	protected String configserver_datasource = "/datasource?";
-	
-	@Getter
-	protected boolean needregist = false ;  //启动时向configserver注册
-	@Getter
-	@Setter
-	protected int updateport = 8080  ;  //响应的端口
-	@Getter
-	@Setter
-	protected String updateuri = DynamicDataSourceFilter.URI ;  //接收动态更新数据源的地址
 	@Getter
 	@Setter
 	protected String dynamicDataSourceName = null ;  //动态数据源的名字
@@ -61,19 +48,17 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	protected String dataSourceClassName = DruidDataSource.class.getCanonicalName() ;
 	@Getter
 	@Setter
-	private DynamicDataSourceUpdateListener listener;
+	private DynamicDataSourceUpdateListener listener;//TODO 改成list
 
 	private DataSource tmp_defaultTargetDataSource ;	
 	private static final String DEFAULT_KEY = "DEFAULT";
-	
-	public static final String TOKEN_GET_ALL = "getall";
 	
 	@Override
 	public void afterPropertiesSet() {
 		if(StringUtils.isBlank(dynamicDataSourceName)){
 			Validate.notNull(null,"dynamicDataSourceName is null");
 		}
-		Map<String,Map<String,String>> map = getProperties(TOKEN_GET_ALL);
+		Map<String,Map<String,String>> map = getProperties(MessageAction.Message_Action_Init);
 		if (map.size() > 0) {
 			for (Entry<String, Map<String,String>> e : map.entrySet()) {
 				DataSource ds =  IDataSourceManagerTool.getHandler(dataSourceClassName).createAinitDataSource(e.getValue());
@@ -87,6 +72,18 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		super.setTargetDataSources(tmp_targetDataSources);
 		super.afterPropertiesSet();
 		reg.put(dynamicDataSourceName,this);
+		if (subscriber != null && needRemote) {
+			subscriber.addListeners(new SubscriberListener() {
+				@Override
+				public boolean init(Topic topic) {return true;}
+				@Override
+				public boolean reload(Topic topic) {updateDataousrce(MessageAction.Message_Action_Reload);return false;}
+				@Override
+				public boolean update(Topic topic) {updateDataousrce(MessageAction.Message_Action_Update);return false;}
+				@Override
+				public boolean delete(Topic topic) {return true;}
+			});
+		}
 	}
 
 	@Override
@@ -100,17 +97,17 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	}
 	
 	@SuppressWarnings("serial")
-	protected Map<String,Map<String,String>> getProperties(String token){
+	protected Map<String,Map<String,String>> getProperties(MessageAction ma){
 		Map<String,Map<String,String>> mp = new HashMap<String,Map<String,String>>();
 		if(!needRemote){ return mp;	}
-		String result = Utils.httpconnnect(configserver_host + configserver_datasource  + DynamicDataSourceFilter.PARAM_DSNAME + "=" + dynamicDataSourceName  + "&token=" + token + "&ip=" + Utils.getLocalIP() );
+		String result = subscriber.getTopic().getCurrentMessage(ma).getMessageBody();
 		mp = GSON.fromJson(result, new TypeToken<HashMap<String,Map<String,String>>>(){}.getType() );
 		log.warn("Dynamic Data Source Property : " + result );
 		return mp ;
 	}
 	
-	public boolean updateDataousrce(String token) {
-		Map<String, Map<String,String>> map = getProperties(token);
+	private boolean updateDataousrce(MessageAction ma) {
+		Map<String, Map<String,String>> map = getProperties(ma);
 		if (map == null || map.size() == 0) {
 			return false;
 		}
@@ -135,13 +132,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)e.getValue());
 		}
 		IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource(tmp_defaultTargetDataSource);
-	}	
-
-	public void setNeedregist(boolean needregist) {
-		this.needregist = needregist;
-		if(needregist)
-			Utils.httpconnnect(configserver_host + configserver_reg + 
-				DynamicDataSourceFilter.PARAM_DSNAME + "="  + dynamicDataSourceName +"&port="+ updateport + "&uri=" + updateuri + "&ip=" + Utils.getLocalIP());
 	}
 	
 	@Override

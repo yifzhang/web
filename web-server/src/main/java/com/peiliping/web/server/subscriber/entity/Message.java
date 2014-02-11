@@ -3,6 +3,8 @@ package com.peiliping.web.server.subscriber.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,6 +32,7 @@ public class Message {
 
 	public static Message build(String json){
 		Map<String, String> m = GSON.fromJson(json, new TypeToken<HashMap<String,String>>(){}.getType() );
+		Validate.isTrue(Boolean.valueOf(m.get("success")),m.get("reason"));
 		Message ms = new Message();
 		ms.setTopicId(m.get("topicId"));
 		ms.setVersion(Long.valueOf(m.get("version")));

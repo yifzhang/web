@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang3.Validate;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +45,7 @@ public class Topic {
 
 	public static Topic build(String json){
 		Map<String, String> m = GSON.fromJson(json, new TypeToken<HashMap<String,String>>(){}.getType() );
+		Validate.isTrue(Boolean.valueOf(m.get("success")),m.get("reason"));
 		Topic t = new Topic();
 		t.setId(m.get("id"));
 		t.setType(TopicType.getTopic(Integer.valueOf(m.get("type"))));
@@ -50,18 +53,23 @@ public class Topic {
 		return t;
 	}
 	
-	public synchronized void addMessage(String json){
+	public synchronized boolean addMessage(String json){
 		Message ms = Message.build(json);
-		messages.get(ms.getAction().getKey()).add(ms);
-		Collections.sort(messages.get(ms.getAction()), new Comparator<Message>() {
+		List<Message> l = messages.get(ms.getAction().getKey());
+		if(l.size()>0 && l.get(l.size()-1).getVersion() >= ms.getVersion()){
+			return false;
+		}
+		l.add(ms);
+		Collections.sort(l, new Comparator<Message>() {
 			@Override
 			public int compare(Message o1, Message o2) {
 				return o1.getVersion()>o2.getVersion() ? -1 : 1 ;
 			}
 		});
-		if(messages.get(ms.getAction()).size() > LIST_SIZE){
-			messages.get(ms.getAction()).remove(0);
+		if(l.size() > LIST_SIZE){
+			l.remove(0);
 		}
+		return true;
 	}
 	
 	public synchronized Message getCurrentMessage(MessageAction ma){

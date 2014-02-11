@@ -4,7 +4,7 @@
 <configuration>
 	<plugins>  
        <plugin interceptor="com.peiliping.web.server.dbtools.datasource.Interceptor4DataSource" >
-        	<property name="kv" value="1" />  
+        	<property name="kv" value="vpsds" />  
        </plugin>
     </plugins> 
     <mappers>
