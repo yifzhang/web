@@ -29,16 +29,14 @@
 		<property name="testWhileIdle" value="true" />
 		<property name="testOnBorrow" value="false" />
 		<property name="testOnReturn" value="false" />		
-		<property name="poolPreparedStatements" value="false" /> <!-- oracle true mysql false -->
+		<property name="poolPreparedStatements" value="true" />
 		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />		
         <property name="removeAbandoned" value="true" /> 
         <property name="removeAbandonedTimeout" value="1200" /> 
         <property name="logAbandoned" value="true" />    	
 	</bean>
 	
-	<bean id="subscriber_vpsds" class="com.peiliping.web.server.subscriber.Subscriber" >
-		
-	</bean>
+	<bean id="subscriber_vpsds" class="com.peiliping.web.server.subscriber.Subscriber" />
     
     <bean id="vpsDynamicDataSource" class="com.peiliping.web.server.dbtools.datasource.DynamicDataSource" destroy-method="close" >
     	<property name="dynamicDataSourceName" value="vpsds" />
