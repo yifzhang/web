@@ -100,6 +100,10 @@
 			<artifactId>druid</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.jsqlparser</groupId>
+			<artifactId>jsqlparser</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.googlecode.concurrentlinkedhashmap</groupId>
 			<artifactId>concurrentlinkedhashmap-lru</artifactId>
 		</dependency>

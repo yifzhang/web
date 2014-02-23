@@ -27,6 +27,8 @@ import com.peiliping.web.server.subscriber.entity.Topic;
 
 public class DynamicDataSource extends AbstractRoutingDataSource {
 	
+	private static final String DEFAULT_KEY = "DEFAULT";
+	
 	protected static Logger log = LoggerFactory.getLogger(DynamicDataSource.class);
 	
 	private static Gson GSON = new GsonBuilder().setLongSerializationPolicy(LongSerializationPolicy.STRING).disableHtmlEscaping().create();
@@ -51,7 +53,8 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 	private DynamicDataSourceUpdateListener listener;//TODO 改成list
 
 	private DataSource tmp_defaultTargetDataSource ;	
-	private static final String DEFAULT_KEY = "DEFAULT";
+	
+	private volatile boolean closed = false ;
 	
 	@Override
 	public void afterPropertiesSet() {
@@ -127,7 +130,11 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 		return true;
 	}
 	
-	public void close(){
+	public synchronized void close(){
+		if(closed){
+			return ;
+		}
+		closed = true ;
 		for(Entry<Object,Object> e :  tmp_targetDataSources.entrySet()){
 			IDataSourceManagerTool.getHandler(dataSourceClassName).destroyDataSource((DataSource)e.getValue());
 		}

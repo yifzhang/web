@@ -34,7 +34,7 @@ public class Interceptor4DataSource implements Interceptor{
 	
 	private static Logger logger = LoggerFactory.getLogger(Interceptor4DataSource.class);
 	
-	private static Object SKIP = new Object();
+	private static final Object SKIP = new Object();
 	
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {

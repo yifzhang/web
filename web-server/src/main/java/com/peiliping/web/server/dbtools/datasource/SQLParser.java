@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+
 public class SQLParser {
 	
 		/**
@@ -104,6 +107,92 @@ public class SQLParser {
 			return null;
 		}
 
+		
+		public static Pair<String,String> findTableNameAndType(String sql0) {
+			if (sql0 == null)
+				return null;
+			sql0 = sql0.trim();
+			if (sql0.length() < 7) {
+				return null;
+			}
+
+			if (sql0.indexOf("/*") != -1) {
+				sql0 = sql0.replaceAll(hintregx, "").trim(); 
+			}
+			sql0 = sql0.toLowerCase();
+			sql0 = sql0 + " ";
+
+			if (sql0.startsWith("update")) {
+				Matcher m = ptable.matcher(sql0);
+				if (m.find(6)) {
+					return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_UPDATE);
+				}
+				return null;
+			}
+
+			if (sql0.startsWith("delete")) {
+				Matcher m = pdelete_from.matcher(sql0);
+				if (m.find(6)) {
+					return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_DELETE);
+				}
+
+				m = ptable.matcher(sql0); 
+				if (m.find(6)) {
+					return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_DELETE);
+				}
+				return null;
+			}
+
+			if (sql0.startsWith("insert")) {
+				Matcher m = pinsert_into.matcher(sql0);
+				if (m.find(6)) {
+					return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_INSERT);
+				}
+				return null;
+			}
+			
+			if (sql0.startsWith("replace")) {
+				Matcher m = preplace_from.matcher(sql0);
+				if (m.find(6)) {
+					return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_OTHER);
+				}
+				return null;
+			}
+
+			if (!sql0.startsWith("select")) {
+				return null; 
+			}
+
+			Matcher m = pselect_from.matcher(sql0);
+			if (m.find(6)) {
+				return new MutablePair<String,String>(m.group(1),TablenameHandler.SQL_TYPE_SELECT);
+			}
+
+			m = pfrom_where.matcher(sql0);
+			if (m.find(6)) {
+				String from2where = m.group(1);
+				String[] tables = from2where.split(",");
+				for (int i = 1; i < tables.length; i++) {
+					if (tables[i].indexOf('(') == -1) {
+						return new MutablePair<String, String>(tables[i].trim().split("\\s")[0],TablenameHandler.SQL_TYPE_SELECT);
+					} else {
+						Pair<String,String> r = findTableNameAndType(tables[i]);
+						if (r != null) {
+							return r;
+						}
+					}
+				}
+			}
+			
+			if (sql0.indexOf(")from") != -1) {
+				sql0 = sql0.replaceAll("\\)from", ") from");
+				return findTableNameAndType(sql0);
+			}
+
+			return null;
+		}
+		
+		
 		public static void main(String[] args) throws IOException {
 			List<String> sqls = new ArrayList<String>();
 //			sqls.add("	\r	\r\n \n   	update 	t_a$ble0 set a=1");
@@ -137,9 +226,10 @@ public class SQLParser {
 //			sqls.add("failed:select u.id from (table(str2numlist(:1))) n join et_airsupply_users u on n.column_value = u.id"); 
 //	        sqls.add("replace into t (i,c,d,ui) values (?,?,?,?)");
 //			sqls.add(" SELECT /*+ ordered use_nl(acc,rb) */ rb.ID,rb.USER_ID,rb.DATABASE_CODE,EVENT_EXTEND FROM (SELECT /*+index(crb,IDX_RA_SC_BILL_STAT) */ crb.USER_ID, min(crb.id) dt FROM RA_SC_BILL crb  WHERE crb.status = 1 and crb.process_mode = 0 and rownum <= 20000 and DATABASE_CODE in (1, 2, 3) GROUP BY crb.USER_ID) acc, RA_SC_BILL rb WHERE rb.Id = acc.dt  and rownum <= 123  and not exists (select 1 from RA_SC_BILL up where up.status = 2 and up.USER_ID = acc.USER_ID)");
-			sqls.add("select	k,v from kv where k = ?#");
+//			sqls.add("select	k,v from kv where k = ?#");
+			sqls.add("select id,name,sex from people force index (name) where id=5");
 	        for (String sql : sqls) {
-				System.out.println(findTableName(sql) + " <-- " + sql);
+				System.out.println(findTableNameAndType(sql) + " <-- " + sql);
 			}
 		}
 

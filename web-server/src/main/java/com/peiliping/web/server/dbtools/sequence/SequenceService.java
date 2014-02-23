@@ -79,4 +79,10 @@ public class SequenceService {
 		}
 		return sequenceList.get(i).nextValue(i,sequenceNum);
 	}
+	
+	public void close(){
+		if(dataSource != null){
+			dataSource.close();
+		}
+	}
 }
