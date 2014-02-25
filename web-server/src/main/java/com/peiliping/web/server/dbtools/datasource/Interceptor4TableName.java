@@ -28,7 +28,7 @@ public class Interceptor4TableName implements Interceptor {
 	
 	private Map<String,TablenameHandler> cacheTableNamevsHandler = new HashMap<String, TablenameHandler>();
 	
-	public static final String PREX = "SHARED_" ;
+	public static final String PREFIX = "_shared_a0b9c8d7e6_" ;
 	
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
@@ -60,7 +60,7 @@ public class Interceptor4TableName implements Interceptor {
 		Pair<String,String> tn = cacheIdvsTableName.get(id);
 		if(tn == null){
 			tn = SQLParser.findTableNameAndType(statementHandler.getBoundSql().getSql());			
-			cacheIdvsTableName.put(id, tn==null ? SKIP : (tn.getLeft().startsWith(PREX) ? tn : SKIP));
+			cacheIdvsTableName.put(id, tn==null ? SKIP : (tn.getLeft().startsWith(PREFIX) ? tn : SKIP));
 		}
 		return cacheIdvsTableName.get(id) == SKIP ? null : tn ;
 	}
