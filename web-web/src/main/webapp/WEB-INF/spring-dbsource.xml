@@ -21,7 +21,7 @@
         <property name="maxActive" value="50"/>
     	<property name="maxWait" value="5000" />    	
     	<property name="filters" value="stat,slf4j" />
-    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000;druid.log.stmt.executableSql=true" />
     	<property name="timeBetweenLogStatsMillis" value="120000" />    	
     	<property name="timeBetweenEvictionRunsMillis" value="60000" />
 		<property name="minEvictableIdleTimeMillis" value="300000" />		
@@ -74,7 +74,7 @@
         <property name="maxActive" value="50"/>
     	<property name="maxWait" value="5000" />    	
     	<property name="filters" value="stat,slf4j" />
-    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000;druid.log.stmt.executableSql=true" />
     	<property name="timeBetweenLogStatsMillis" value="120000" />    	
     	<property name="timeBetweenEvictionRunsMillis" value="60000" />
 		<property name="minEvictableIdleTimeMillis" value="300000" />		
@@ -98,7 +98,7 @@
         <property name="maxActive" value="50"/>
     	<property name="maxWait" value="5000" />    	
     	<property name="filters" value="stat,slf4j" />
-    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000" />
+    	<property name="connectionProperties" value="druid.stat.slowSqlMillis=1000;druid.log.stmt.executableSql=true" />
     	<property name="timeBetweenLogStatsMillis" value="120000" />    	
     	<property name="timeBetweenEvictionRunsMillis" value="60000" />
 		<property name="minEvictableIdleTimeMillis" value="300000" />		

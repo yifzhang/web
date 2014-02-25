@@ -28,6 +28,8 @@ public class Interceptor4TableName implements Interceptor {
 	
 	private Map<String,TablenameHandler> cacheTableNamevsHandler = new HashMap<String, TablenameHandler>();
 	
+	public static final String PREX = "SHARED_" ;
+	
 	@Override
 	public Object intercept(Invocation invocation) throws Throwable {
 		StatementHandler statementHandler = (StatementHandler) invocation.getTarget();
@@ -44,7 +46,7 @@ public class Interceptor4TableName implements Interceptor {
 		if(tableNameAndType != null && StringUtils.isNotBlank(tableNameAndType.getLeft()) &&
 				cacheTableNamevsHandler.get(tableNameAndType.getLeft())!=null){
 			String newTableName = cacheTableNamevsHandler.get(tableNameAndType.getLeft()).getTargetTableName(
-					tableNameAndType.getRight(), tableNameAndType.getRight(), params, mapperId);
+					tableNameAndType.getRight(), tableNameAndType.getLeft(), params, mapperId);
 			String sql = statementHandler.getBoundSql().getSql();
 			if(StringUtils.isNotBlank(sql)&&StringUtils.isNotBlank(newTableName)){
 				sql.replaceAll(tableNameAndType.getLeft(),newTableName);
@@ -58,9 +60,9 @@ public class Interceptor4TableName implements Interceptor {
 		Pair<String,String> tn = cacheIdvsTableName.get(id);
 		if(tn == null){
 			tn = SQLParser.findTableNameAndType(statementHandler.getBoundSql().getSql());			
-			cacheIdvsTableName.put(id, tn==null ? SKIP : tn);
+			cacheIdvsTableName.put(id, tn==null ? SKIP : (tn.getLeft().startsWith(PREX) ? tn : SKIP));
 		}
-		return tn == SKIP ? null : tn ;
+		return cacheIdvsTableName.get(id) == SKIP ? null : tn ;
 	}
 
 	@Override
