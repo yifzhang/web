@@ -53,7 +53,7 @@ public class SequenceService {
 		Validate.isTrue(sequenceNum>=1);
 		Validate.isTrue(dataSource!=null);
 		Validate.isTrue(sequenceClazzName!=null);
-		dataSource.setListener(new DynamicDataSourceUpdateListener() {
+		dataSource.addDynamicDataSourceUpdateListener(new DynamicDataSourceUpdateListener() {
 			@Override
 			public void call(String k, DataSource dnew, DataSource dold) {
 				sequenceList.get(Integer.valueOf(k)).getSequenceDao().setDataSource(dnew);
