@@ -125,7 +125,7 @@
 		<property name="defaultTargetDataSource" ref="dataSource" /><!-- 不写的话启动的时候会抛一个异常 但是不影响运行 -->
 	</bean>
 	
-	<bean id="seqservice" class="com.peiliping.web.server.dbtools.sequence.SequenceService" init-method="init">
+	<bean id="seqservice" class="com.peiliping.web.server.dbtools.sequence.SequenceService" init-method="init" destroy-method="close">
 		<property name="sequenceName" value="seqtest" />
 		<property name="sequenceNum" value="2" />
 		<property name="step" value="100" />
