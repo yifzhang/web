@@ -65,9 +65,10 @@ public class Interceptor4TableName implements Interceptor {
         Pair<String, String> tn = cacheIdvsTableName.get(id);
         if (noCache4Sql || tn == null) {
             tn = SQLParser.findTableNameAndType(statementHandler.getBoundSql().getSql());
-            cacheIdvsTableName.put(id, tn == null ? SKIP : (tn.getLeft().startsWith(prefix) ? tn : SKIP));
+            tn = (tn == null || tn == SKIP ? SKIP : (tn.getLeft().startsWith(prefix) ? tn : SKIP));
+            cacheIdvsTableName.put(id, tn);
         }
-        return cacheIdvsTableName.get(id) == SKIP ? null : tn;
+        return tn == SKIP ? null : tn;
     }
 
     @Override
