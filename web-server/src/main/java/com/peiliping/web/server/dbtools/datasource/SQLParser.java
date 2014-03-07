@@ -227,7 +227,8 @@ public class SQLParser {
 //	        sqls.add("replace into t (i,c,d,ui) values (?,?,?,?)");
 //			sqls.add(" SELECT /*+ ordered use_nl(acc,rb) */ rb.ID,rb.USER_ID,rb.DATABASE_CODE,EVENT_EXTEND FROM (SELECT /*+index(crb,IDX_RA_SC_BILL_STAT) */ crb.USER_ID, min(crb.id) dt FROM RA_SC_BILL crb  WHERE crb.status = 1 and crb.process_mode = 0 and rownum <= 20000 and DATABASE_CODE in (1, 2, 3) GROUP BY crb.USER_ID) acc, RA_SC_BILL rb WHERE rb.Id = acc.dt  and rownum <= 123  and not exists (select 1 from RA_SC_BILL up where up.status = 2 and up.USER_ID = acc.USER_ID)");
 //			sqls.add("select	k,v from kv where k = ?#");
-			sqls.add("select id,name,sex from people force index (name) where id=5");
+//			sqls.add("select id,name,sex from people force index (name) where id=5");
+			sqls.add("insert into medd values (?,?),(?,?)");
 	        for (String sql : sqls) {
 				System.out.println(findTableNameAndType(sql) + " <-- " + sql);
 			}
