@@ -94,14 +94,14 @@ public class TestControl {
 	@RequestMapping("/json.do")
 	@ResponseBody
 	public Map<String, Object> testvm2() {
-		return (new MapX()).add("a", "b").add("c", "d").add("e", "f");
+		return MapX.newMapXSO("a", "b").add("c", "d").add("e", "f");
 	}
 	
 	@RequestMapping("/seq.do")
 	@ResponseBody
 	public Map<String, Object> seqvm2() throws SequenceException {
 		long t = seqservice.nextValue();
-		return MapX.addAndGet("seq", t);
+		return MapX.newMapXSO("seq", (Object)t);
 	}
 
 }
