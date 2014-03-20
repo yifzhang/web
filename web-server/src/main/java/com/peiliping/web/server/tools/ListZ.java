@@ -36,6 +36,10 @@ public class ListZ<E> extends ArrayList<E> {
         return l.put(e);
     }
 
+    public static <E> ListZ<E> newListZ() {
+        return new ListZ<E>();
+    }
+
     @Override
     public void add(int index, E element) {
         if (lock)
@@ -68,4 +72,37 @@ public class ListZ<E> extends ArrayList<E> {
         lock = true;
         return ListZ.this;
     }
+
+    public E pickUpFirstOne(PickUpFunction<E> pick) {
+        for (E e : this) {
+            if (pick.pickUp(e)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public E pickUpLastOne(PickUpFunction<E> pick) {
+        for (int i = size() - 1; i >= 0; i--) {
+            if (pick.pickUp(get(i))) {
+                return get(i);
+            }
+        }
+        return null;
+    }
+
+    public ListZ<E> pickUpSome(PickUpFunction<E> pick) {
+        ListZ<E> l = ListZ.newListZ();
+        for (E e : this) {
+            if (pick.pickUp(e)) {
+               l.put(e);
+            }
+        }
+        return l;
+    }
+
+    public interface PickUpFunction<V> {
+        boolean pickUp(V v);
+    }
+
 }
