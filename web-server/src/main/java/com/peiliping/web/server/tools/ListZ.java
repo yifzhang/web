@@ -2,6 +2,8 @@ package com.peiliping.web.server.tools;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ListZ<E> extends ArrayList<E> {
 
@@ -74,9 +76,9 @@ public class ListZ<E> extends ArrayList<E> {
     }
 
     public E pickUpFirstOne(PickUpFunction<E> pick) {
-        for (E e : this) {
-            if (pick.pickUp(e)) {
-                return e;
+        for (int i = 0; i < this.size(); i++) {
+            if (pick.pickUp(i, this.get(i))) {
+                return this.get(i);
             }
         }
         return null;
@@ -84,7 +86,7 @@ public class ListZ<E> extends ArrayList<E> {
 
     public E pickUpLastOne(PickUpFunction<E> pick) {
         for (int i = size() - 1; i >= 0; i--) {
-            if (pick.pickUp(get(i))) {
+            if (pick.pickUp(i, get(i))) {
                 return get(i);
             }
         }
@@ -93,16 +95,31 @@ public class ListZ<E> extends ArrayList<E> {
 
     public ListZ<E> pickUpSome(PickUpFunction<E> pick) {
         ListZ<E> l = ListZ.newListZ();
-        for (E e : this) {
-            if (pick.pickUp(e)) {
-               l.put(e);
+        for (int i = 0; i < this.size(); i++) {
+            if (pick.pickUp(i, this.get(i))) {
+                l.put(this.get(i));
             }
         }
         return l;
     }
 
+    public ListZ<E> handleFunction(HandleFunction<E> f) {
+        for (E e : this) {
+            f.handle(e);
+        }
+        return ListZ.this;
+    }
+
+    public void sort(Comparator<E> c) {
+        Collections.sort(this, c);
+    }
+
+    public interface HandleFunction<V> {
+        void handle(V v);
+    }
+
     public interface PickUpFunction<V> {
-        boolean pickUp(V v);
+        boolean pickUp(int index, V v);
     }
 
 }
