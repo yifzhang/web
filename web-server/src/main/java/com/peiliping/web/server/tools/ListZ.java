@@ -28,6 +28,11 @@ public class ListZ<E> extends ArrayList<E> {
         return this;
     }
 
+    public ListZ<E> putAll(Collection<? extends E> c) {
+        super.addAll(c);
+        return this;
+    }
+
     public static <E> ListZ<E> newListZ(E e) {
         ListZ<E> l = new ListZ<E>();
         return l.put(e);
@@ -40,6 +45,10 @@ public class ListZ<E> extends ArrayList<E> {
 
     public static <E> ListZ<E> newListZ() {
         return new ListZ<E>();
+    }
+
+    public static <E> ListZ<E> newListZ(Collection<? extends E> c) {
+        return (new ListZ<E>()).putAll(c);
     }
 
     @Override
@@ -112,6 +121,18 @@ public class ListZ<E> extends ArrayList<E> {
 
     public void sort(Comparator<E> c) {
         Collections.sort(this, c);
+    }
+
+    public <N> ListZ<N> transform(TransformFunction<N, E> f) {
+        ListZ<N> result = ListZ.newListZ();
+        for (E e : this) {
+            result.add(f.transform(e));
+        }
+        return result;
+    }
+
+    public interface TransformFunction<N, O> {
+        N transform(O o);
     }
 
     public interface HandleFunction<V> {
