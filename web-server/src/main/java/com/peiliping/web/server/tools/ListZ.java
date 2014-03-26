@@ -126,7 +126,10 @@ public class ListZ<E> extends ArrayList<E> {
     public <N> ListZ<N> transform(TransformFunction<N, E> f) {
         ListZ<N> result = ListZ.newListZ();
         for (E e : this) {
-            result.add(f.transform(e));
+            N n = f.transform(e);
+            if (n != null) {
+                result.add(n);
+            }
         }
         return result;
     }
