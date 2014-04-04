@@ -57,7 +57,13 @@ public class Interceptor4DataSource implements Interceptor{
 		}else{
 			DataSourceContextHolder.setDataSourceName((String)cache.get(ms.getId()));
 		}
-		return invocation.proceed();
+		Object  o = null ;
+		try{
+		    o = invocation.proceed();
+		}finally{
+		    DataSourceContextHolder.clearDataSourceName();
+		}
+		return o;
 	}
 
 	@Override
