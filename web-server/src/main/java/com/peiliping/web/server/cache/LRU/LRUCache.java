@@ -42,6 +42,7 @@ public class LRUCache {
 		cache = new ConcurrentLinkedHashMap.Builder<Object, CacheItem>()
 				.maximumWeightedCapacity(maxsize).weigher(Weighers.singleton())
 				.build();
+		LRUCacheManager.regist(title, this);
 	}
 
 	public void clear() {
@@ -50,6 +51,11 @@ public class LRUCache {
 		if (cache != null) {
 			cache.clear();
 		}
+	}
+	
+	public void cleanStats(){
+	    in.set(0);
+	    hit.set(0);
 	}
 
 	public Object get(Object key) {
