@@ -83,7 +83,7 @@ public class UserAgentTool {
 
     private static final long                                LIMIT         = Long.MAX_VALUE - Long.MAX_VALUE / 10000;
 
-    public UserAgentTool() {
+    public void init(){
         if (autoSortTime > 60000) {
             needAutoSort = true;
             timer = new Timer();
