@@ -1,6 +1,7 @@
 package com.peiliping.web.controls;
 
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +29,35 @@ public class TestControl {
 	
 	private static Logger logger = LoggerFactory.getLogger("web-log");
 
+	@RequestMapping("/asynctest.htm")
+	public Callable<String> testasync(){
+	    return new Callable<String>() {
+            @Override
+            public String call() throws Exception {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                for(int i=0 ; i<100 ;i++)
+                    kvDAO.getKV("1");
+                logger.error("testjsp");
+                M.m();
+                return "test";
+            }
+	        
+	    };
+	}
+	
 	@RequestMapping("/test.htm")
 	public String test() {
 		try {
-			Thread.sleep(50);
+			Thread.sleep(10);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		for(int i=0 ; i<100 ;i++)
+            kvDAO.getKV("1");
 		logger.error("testjsp");
 		M.m();
 		return "test";
